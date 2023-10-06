@@ -1,0 +1,52 @@
+/*******************************************************************
+██████╗░███████╗░██████╗███████╗████████╗░░░░█████╗░░██████╗░██████╗
+██╔══██╗██╔════╝██╔════╝██╔════╝╚══██╔══╝░░░██╔══██╗██╔════╝██╔════╝
+██████╔╝█████╗░░╚█████╗░█████╗░░░░░██║░░░░░░██║░░╚═╝╚█████╗░╚█████╗░
+██╔══██╗██╔══╝░░░╚═══██╗██╔══╝░░░░░██║░░░░░░██║░░██╗░╚═══██╗░╚═══██╗
+██║░░██║███████╗██████╔╝███████╗░░░██║░░░██╗╚█████╔╝██████╔╝██████╔╝
+╚═╝░░╚═╝╚══════╝╚═════╝░╚══════╝░░░╚═╝░░░╚═╝░╚════╝░╚═════╝░╚═════╝░
+*******************************************************************/
+:where(*) {
+    margin: 0px;
+    padding: 0px;
+    font-family: "Klee One";
+}
+
+:where(header, footer, main, nav, article, aside, section) {
+    display: block;
+}
+
+:where(h2) {
+    font-size: 20px;
+}
+
+:where(ul) {
+    padding-left: 1.5em;
+    list-style-type: circle;
+}
+
+:where(hr) {
+    border-image: linear-gradient(to right, transparent, #989898, transparent);
+    border-image-slice: 1;
+}
+
+:where(a) {
+    text-decoration: none !important;
+}
+
+:where(code) {
+    display: inline-block;
+    padding: 0.1em 0.2em;
+    background-color: #e7edf3;
+    border-radius: 3px;
+    font-family: monospace;
+}
+
+::selection {
+    background-color: rgba(152, 251, 152, 0.3);
+    color: rgb(0, 128, 128);
+}
+
+::marker {
+    color: #223222;
+}

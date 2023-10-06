@@ -1,0 +1,24 @@
+/************************************************************************************
+░██████╗████████╗██╗░░░██╗██╗░░░░░███████╗░██████╗░░░░██████╗░█████╗░░██████╗░██████╗
+██╔════╝╚══██╔══╝╚██╗░██╔╝██║░░░░░██╔════╝██╔════╝░░░██╔════╝██╔══██╗██╔════╝██╔════╝
+╚█████╗░░░░██║░░░░╚████╔╝░██║░░░░░█████╗░░╚█████╗░░░░╚█████╗░██║░░╚═╝╚█████╗░╚█████╗░
+░╚═══██╗░░░██║░░░░░╚██╔╝░░██║░░░░░██╔══╝░░░╚═══██╗░░░░╚═══██╗██║░░██╗░╚═══██╗░╚═══██╗
+██████╔╝░░░██║░░░░░░██║░░░███████╗███████╗██████╔╝██╗██████╔╝╚█████╔╝██████╔╝██████╔╝
+╚═════╝░░░░╚═╝░░░░░░╚═╝░░░╚══════╝╚══════╝╚═════╝░╚═╝╚═════╝░░╚════╝░╚═════╝░╚═════╝░
+************************************************************************************/
+
+@charset "UTF-8";
+@import url('https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c');
+@import url('https://fonts.googleapis.com/css?family=Sawarabi+Gothic');
+@import url('https://fonts.googleapis.com/css?family=Sacramento');
+@import url('https://fonts.googleapis.com/css?family=Klee+One');
+@font-face {
+	font-family: 'Komorebi Gothic';
+    font-style: normal;
+	src: url(/fonts/komorebi-gothic.ttf);
+}
+
+$title-font: 'M PLUS Rounded 1c', sans-serif;
+$menu-font: 'Komorebi Gothic', 'Sawarabi Gothic', sans-serif;
+$alphabet-font: 'Klee+One';
+$cursive-font: 'Sacramento', cursive;
