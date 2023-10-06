@@ -18,7 +18,73 @@
 	src: url(/fonts/komorebi-gothic.ttf);
 }
 
+// fonts
 $title-font: 'M PLUS Rounded 1c', sans-serif;
 $menu-font: 'Komorebi Gothic', 'Sawarabi Gothic', sans-serif;
 $alphabet-font: 'Klee+One';
 $cursive-font: 'Sacramento', cursive;
+
+// colors
+
+// images
+$background-image: url(background-image.jpg);
+
+// numerics
+$body-length: 100vmin;
+
+// components
+%body {
+    position: relative;
+    padding: 0;
+    margin: auto;
+}
+
+%header {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+%footer {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+}
+
+@mixin blur($image: $background-image) {
+    background-image: $image;
+    background-repeat: no-repeat;
+    background-size: contain;
+    @content;
+}
+
+%blur-before {
+    top: -3px;
+    bottom: -3px;
+    left: -3px;
+    right: -3px;
+    background: inherit;
+    filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+}
+
+// events
+@mixin hover($ie: false) {
+    &:focus {
+        @content;
+    }
+    
+    @media (hover: hover) and (pointer: fine) {
+        &:hover {
+            @content;
+        }
+    }
+
+    @if $ie {
+        @at-root .ua-ie &:hover {
+            @content;
+        }
+    }
+}

@@ -1,30 +1,92 @@
-body {
+@charset "UTF-8";
+/************************************************************************************
+░██████╗████████╗██╗░░░██╗██╗░░░░░███████╗░██████╗░░░░██████╗░█████╗░░██████╗░██████╗
+██╔════╝╚══██╔══╝╚██╗░██╔╝██║░░░░░██╔════╝██╔════╝░░░██╔════╝██╔══██╗██╔════╝██╔════╝
+╚█████╗░░░░██║░░░░╚████╔╝░██║░░░░░█████╗░░╚█████╗░░░░╚█████╗░██║░░╚═╝╚█████╗░╚█████╗░
+░╚═══██╗░░░██║░░░░░╚██╔╝░░██║░░░░░██╔══╝░░░╚═══██╗░░░░╚═══██╗██║░░██╗░╚═══██╗░╚═══██╗
+██████╔╝░░░██║░░░░░░██║░░░███████╗███████╗██████╔╝██╗██████╔╝╚█████╔╝██████╔╝██████╔╝
+╚═════╝░░░░╚═╝░░░░░░╚═╝░░░╚══════╝╚══════╝╚═════╝░╚═╝╚═════╝░░╚════╝░╚═════╝░╚═════╝░
+************************************************************************************/
+@import url("https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c");
+@import url("https://fonts.googleapis.com/css?family=Sawarabi+Gothic");
+@import url("https://fonts.googleapis.com/css?family=Sacramento");
+@import url("https://fonts.googleapis.com/css?family=Klee+One");
+@font-face {
+  font-family: "Komorebi Gothic";
+  font-style: normal;
+  src: url(/fonts/komorebi-gothic.ttf);
+}
+.body {
   position: relative;
+  padding: 0;
+  margin: auto;
 }
 
-header {
+.body .header {
   position: absolute;
   top: 0;
   left: 0;
-  width: 100vmin;
+  width: 100%;
 }
 
-main {
+.body .footer {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+}
+
+.body .content-body::before {
+  top: -3px;
+  bottom: -3px;
+  left: -3px;
+  right: -3px;
+  background: inherit;
+  filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+}
+
+*[class^=en-] {
+  display: none;
+}
+
+.body {
   width: 100vmin;
   height: 100vmin;
-  margin: auto;
-  padding: 0;
 }
-main .content-body {
+.body .header {
+  height: 10%;
+}
+.body h2 {
+  font-family: "M PLUS Rounded 1c", sans-serif;
+}
+.body .content-body {
+  background-image: url(background-image.jpg);
+  background-repeat: no-repeat;
+  background-size: contain;
   width: 100%;
   height: 100%;
   margin: 0;
-  background-image: url(background-image.jpg);
+  position: relative;
+  z-index: 0;
 }
-
-footer {
+.body .content-body::before {
+  content: "";
   position: absolute;
-  top: 0;
-  left: 0;
-  width: 100vmin;
+  z-index: -1;
+}
+.body .content-body .content-titlebox {
+  position: absolute;
+  bottom: 15%;
+  left: 7.5%;
+  width: 35%;
+  padding: 0.3em;
+  background-color: rgba(0, 0, 0, 0.4);
+  color: #dfdfdf;
+}
+.body .content-body .content-titlebox .content-title, .body .content-body .content-titlebox .content-subtitle {
+  font-weight: normal;
+}
+.body .footer {
+  height: 10%;
 }/*# sourceMappingURL=index.css.map */

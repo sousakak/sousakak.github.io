@@ -1,30 +1,60 @@
-body {
-    position: relative;
+@import "utils.scss";
+
+// 言語分けをどうにかしてやりたい。
+
+*[class^="en-"] {
+    display: none;
 }
 
-header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vmin;
-}
+.body {
+    @extend %body;
+    width: $body-length;
+    height: $body-length;
 
-main {
-    width: 100vmin;
-    height: 100vmin;
-    margin: auto;
-    padding: 0;
+    .header {
+        @extend %header;
+        height: 10%;
+    }
+
+    h2 {
+        font-family: $title-font;
+    }
+
     .content-body {
+        @include blur($background-image) {
+            &::before {
+                content: '';
+                position: absolute;
+                @extend %blur-before;
+                z-index: -1;
+            }
+        };
+
         width: 100%;
         height: 100%;
         margin: 0;
-        background-image: url(background-image.jpg);
-    }
-}
+        position: relative;
+        z-index: 0;
 
-footer {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100vmin;
+        .content-titlebox {
+            position: absolute;
+            bottom: 15%;
+            left: 7.5%;
+            width: 35%;
+            padding: 0.3em;
+            background-color: rgba($color: #000000, $alpha: 0.4);
+            color: #dfdfdf;
+            .content-title {
+                font-weight: normal;
+            }
+            .content-subtitle {
+                @extend .content-title;
+            }
+        }
+    }
+
+    .footer {
+        @extend %footer;
+        height: 10%;
+    }
 }
