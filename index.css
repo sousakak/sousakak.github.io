@@ -54,11 +54,71 @@
   width: 100vmin;
   height: 100vmin;
 }
+@media only screen and (min-width: 491px) {
+  .body {
+    font-size: 1rem;
+  }
+}
+@media only screen and (min-width: 443px) and (max-width: 490px) {
+  .body {
+    font-size: calc(1.48rem + ((1vw - 0.443rem) * (2.5531914894)));
+  }
+}
+@media only screen and (min-width: 396px) and (max-width: 442px) {
+  .body {
+    font-size: calc(1.36rem + ((1vw - 0.396rem) * (2.6086956522)));
+  }
+}
+@media only screen and (min-width: 348px) and (max-width: 395px) {
+  .body {
+    font-size: calc(1.24rem + ((1vw - 0.348rem) * (2.5531914894)));
+  }
+}
+@media only screen and (min-width: 301px) and (max-width: 347px) {
+  .body {
+    font-size: calc(1.12rem + ((1vw - 0.301rem) * (2.6086956522)));
+  }
+}
+@media only screen and (max-width: 300px) {
+  .body {
+    font-size: calc(0rem + ((1vw - 0rem) * (3.7333333333)));
+  }
+}
 .body .header {
   height: 10%;
 }
 .body h2 {
   font-family: "M PLUS Rounded 1c", sans-serif;
+}
+@media only screen and (min-width: 491px) {
+  .body h2 {
+    font-size: 1.875rem;
+  }
+}
+@media only screen and (min-width: 443px) and (max-width: 490px) {
+  .body h2 {
+    font-size: calc(2.68rem + ((1vw - 0.443rem) * (6.8085106383)));
+  }
+}
+@media only screen and (min-width: 396px) and (max-width: 442px) {
+  .body h2 {
+    font-size: calc(2.36rem + ((1vw - 0.396rem) * (6.9565217391)));
+  }
+}
+@media only screen and (min-width: 348px) and (max-width: 395px) {
+  .body h2 {
+    font-size: calc(2.04rem + ((1vw - 0.348rem) * (6.8085106383)));
+  }
+}
+@media only screen and (min-width: 301px) and (max-width: 347px) {
+  .body h2 {
+    font-size: calc(1.72rem + ((1vw - 0.301rem) * (6.9565217391)));
+  }
+}
+@media only screen and (max-width: 300px) {
+  .body h2 {
+    font-size: calc(0rem + ((1vw - 0rem) * (5.7333333333)));
+  }
 }
 .body .content-body {
   background-image: url(background-image.jpg);
@@ -86,6 +146,36 @@
 }
 .body .content-body .content-titlebox .content-title, .body .content-body .content-titlebox .content-subtitle {
   font-weight: normal;
+}
+@media only screen and (min-width: 491px) {
+  .body .content-body .content-titlebox .content-subtitle {
+    font-size: 1.125rem;
+  }
+}
+@media only screen and (min-width: 443px) and (max-width: 490px) {
+  .body .content-body .content-titlebox .content-subtitle {
+    font-size: calc(1.48rem + ((1vw - 0.443rem) * (6.8085106383)));
+  }
+}
+@media only screen and (min-width: 396px) and (max-width: 442px) {
+  .body .content-body .content-titlebox .content-subtitle {
+    font-size: calc(1.16rem + ((1vw - 0.396rem) * (6.9565217391)));
+  }
+}
+@media only screen and (min-width: 348px) and (max-width: 395px) {
+  .body .content-body .content-titlebox .content-subtitle {
+    font-size: calc(0.84rem + ((1vw - 0.348rem) * (6.8085106383)));
+  }
+}
+@media only screen and (min-width: 301px) and (max-width: 347px) {
+  .body .content-body .content-titlebox .content-subtitle {
+    font-size: calc(0.52rem + ((1vw - 0.301rem) * (6.9565217391)));
+  }
+}
+@media only screen and (max-width: 300px) {
+  .body .content-body .content-titlebox .content-subtitle {
+    font-size: calc(0rem + ((1vw - 0rem) * (1.7333333333)));
+  }
 }
 .body .footer .waves-svg {
   position: relative;
@@ -126,7 +216,15 @@
 }
 .body .footer .footer-content {
   position: relative;
-  height: 5%;
+  height: 5vmin;
+  display: flex;
   text-align: center;
   background-color: #90F59A;
+}
+.body .footer .footer-content > .footer-credit {
+  width: calc(100% - 50px);
+}
+.body .footer .footer-content > .footer-links svg[class$=-icon] {
+  width: 3vmin;
+  height: 3vmin;
 }/*# sourceMappingURL=index.css.map */

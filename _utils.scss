@@ -8,6 +8,20 @@
 ************************************************************************************/
 
 @charset "UTF-8";
+
+// meta functions
+@function strip-unit($number) {
+    @if type-of($number) == 'number' and not unitless($number) {
+        @return $number / ($number * 0 + 1);
+    }
+    @return $number;
+}
+
+@function rem($px, $base: 16) {
+    @return calc($px / $base * 1rem);
+}
+
+// fonts
 @import url('https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c');
 @import url('https://fonts.googleapis.com/css?family=Sawarabi+Gothic');
 @import url('https://fonts.googleapis.com/css?family=Sacramento');
@@ -18,11 +32,89 @@
 	src: url(/fonts/komorebi-gothic.ttf);
 }
 
-// fonts
 $title-font: 'M PLUS Rounded 1c', sans-serif;
 $menu-font: 'Komorebi Gothic', 'Sawarabi Gothic', sans-serif;
 $alphabet-font: 'Klee+One';
 $cursive-font: 'Sacramento', cursive;
+
+$breakpoints : (
+    list: (
+        300px, 347px, 395px, 442px, 490px
+    )
+);
+
+$brakpoint-media: ( // The value of $breakpoints cannot be used if this is combined from the jump
+    media: (
+        xs:"only screen and (max-width: #{nth(map-get($breakpoints, list), 1)})",
+        xs-s:"only screen and (min-width: #{nth(map-get($breakpoints, list), 1) + 1}) and (max-width: #{nth(map-get($breakpoints, list),2)})",
+        s:"only screen and (max-width: #{nth(map-get($breakpoints, list), 2)})",
+        s-m:"only screen and (min-width: #{nth(map-get($breakpoints, list), 2) + 1}) and (max-width: #{nth(map-get($breakpoints, list),3)})",
+        m:"only screen and (max-width: #{nth(map-get($breakpoints, list), 3)})",
+        mmin:"only screen and (min-width: #{nth(map-get($breakpoints, list), 3)})",
+        m-l:"only screen and (min-width: #{nth(map-get($breakpoints, list), 3) + 1}) and (max-width: #{nth(map-get($breakpoints, list),4)})",
+        l:"only screen and (max-width: #{nth(map-get($breakpoints, list), 4)})",
+        lmin:"only screen and (min-width: #{nth(map-get($breakpoints, list), 4)})",
+        l-ul:"only screen and (min-width: #{nth(map-get($breakpoints, list), 4) + 1}) and (max-width: #{nth(map-get($breakpoints, list),5)})",
+        ul:"only screen and (max-width: #{nth(map-get($breakpoints, list), 5)})",
+        d:"only screen and (min-width: #{nth(map-get($breakpoints, list), 5) + 1})",
+    )
+);
+
+$breakpoints: (
+    map-merge($breakpoints, $brakpoint-media)
+);
+
+@mixin media($breakpoint) {
+    @media #{map-get(map-get($breakpoints, media), $breakpoint)} {
+        @content;
+    }
+}
+
+@function sizecalc($sizefrom, $sizeto, $vpfrom, $vpto) {
+    $size_diff : $sizeto - $sizefrom;
+    $vp-width-diff : strip-unit($vpto) - strip-unit($vpfrom);
+
+    $vp-width-min : calc(strip-unit($vpfrom) / 100 * 0.1rem);
+    $size-per-vp : calc(100 * $size_diff / $vp-width-diff);
+    $size-min : $sizefrom / 10 + 0rem;
+
+    @return calc(#{$size-min} + ((1vw - #{$vp-width-min}) * (#{$size-per-vp})));
+}
+
+@mixin font-size($ul: 16, $min: 10, $l: true, $m: true, $s: true, $xs: true) {
+    @if $l {
+        $l  : calc(($ul - $min) * (4 / 5) + $min);
+    }
+    @if $m {
+        $m  : calc(($ul - $min) * (3 / 5) + $min);
+    }
+    @if $s {
+        $s  : calc(($ul - $min) * (2 / 5) + $min);
+    }
+    @if $xs {
+        $xs : calc(($ul - $min) * (1 / 5) + $min);
+    }
+    & {
+        @include media(d) {
+            font-size: rem($ul);
+        }
+        @include media(l-ul) {
+            font-size: sizecalc($l, $ul, nth(map-get($breakpoints, list), 4) + 1, nth(map-get($breakpoints, list), 5));
+        }
+        @include media(m-l) {
+            font-size: sizecalc($m, $l, nth(map-get($breakpoints, list), 3) + 1, nth(map-get($breakpoints, list), 4));
+        }
+        @include media(s-m) {
+            font-size: sizecalc($s, $m, nth(map-get($breakpoints, list), 2) + 1, nth(map-get($breakpoints, list), 3));
+        }
+        @include media(xs-s) {
+            font-size: sizecalc($xs, $s, nth(map-get($breakpoints, list), 1) + 1, nth(map-get($breakpoints, list), 2));
+        }
+        @include media(xs) {
+            font-size: sizecalc(0, $xs, 0, nth(map-get($breakpoints, list), 1));
+        }
+    }
+}
 
 // colors
 $colors: (

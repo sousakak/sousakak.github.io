@@ -1,4 +1,4 @@
-@import "utils.scss";
+@use "utils" as *;
 
 // 言語分けをどうにかしてやりたい。
 *[class^="en-"] {
@@ -9,6 +9,7 @@
     @extend %body;
     width: $body-length;
     height: $body-length;
+    @include font-size();
 
     .header {
         @extend %header;
@@ -17,6 +18,7 @@
 
     h2 {
         font-family: $title-font;
+        @include font-size($ul: 30, $min: 14);
     }
 
     .content-body {
@@ -48,6 +50,7 @@
             }
             .content-subtitle {
                 @extend .content-title;
+                @include font-size($ul: 18, $min: 2);
             }
         }
     }
@@ -92,9 +95,19 @@
         }
         .footer-content {
             position:relative;
-            height: 5%;
+            height: 5vmin;
+            display: flex;
             text-align: center;
             background-color: color(main, index);
+            & > .footer-credit {
+                width: calc(100% - 50px);
+            }
+            & > .footer-links {
+                svg[class$="-icon"] {
+                    width: 3vmin;
+                    height: 3vmin;
+                }
+            }
         }
     }
 }
