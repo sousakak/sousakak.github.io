@@ -31,7 +31,7 @@
         <link href="https://fonts.googleapis.com/css?family=Sacramento" rel="stylesheet">
         <link href="https://fonts.googleapis.com/css?family=Klee+One" rel="stylesheet">
         <link rel="stylesheet" href="reset.css">
-        <link rel="stylesheet" href="index.css">
+        <link rel="stylesheet" href="index.css"> <!-- 後ろにクエリパラメータをランダムに付けることでキャッシュを破棄して更新できる -->
     </head>
     <body>
         <div class="body index-body">
@@ -46,7 +46,24 @@
                     </div>
                 </div>
             </div>
-            <div class="footer"></div>
+            <div class="footer">
+                <div class="waves-div">
+                    <svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+                        <defs>
+                            <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+                        </defs>
+                        <g class="parallax">
+                            <use xlink:href="#gentle-wave" x="48" y="0" />
+                            <use xlink:href="#gentle-wave" x="48" y="3" />
+                            <use xlink:href="#gentle-wave" x="48" y="5" />
+                            <use xlink:href="#gentle-wave" x="48" y="7" />
+                        </g>
+                    </svg>
+                </div>
+                <div class="footer-content">
+                    &copy; 2023 sousakak
+                </div>
+            </div>
         </div>
     </body>
 </html>

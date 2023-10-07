@@ -1,7 +1,6 @@
 @import "utils.scss";
 
 // 言語分けをどうにかしてやりたい。
-
 *[class^="en-"] {
     display: none;
 }
@@ -38,9 +37,9 @@
 
         .content-titlebox {
             position: absolute;
-            bottom: 15%;
-            left: 7.5%;
-            width: 35%;
+            bottom: 15vmin;
+            left: 7.5vmin;
+            width: 35vmin;
             padding: 0.3em;
             background-color: rgba($color: #000000, $alpha: 0.4);
             color: #dfdfdf;
@@ -55,6 +54,47 @@
 
     .footer {
         @extend %footer;
-        height: 10%;
+        .waves-svg {
+            position: relative;
+            margin-bottom: -7px;
+            width: 100%;
+            height: 10vmin;
+        }
+        .parallax {
+            & > use {
+                animation: waving 25s cubic-bezier(.55,.5,.45,.5) infinite;
+                @for $No from 1 through 4 {
+                    @if $No == 4 {
+                        &:nth-child(#{$No}) {
+                            animation-delay: #{-1 - $No}s;
+                            animation-duration: #{8 + 3 * $No}s;
+                            fill: transparentize(color(main, index), 0.8);
+                        }
+                    }
+                    @else {
+                        &:nth-child(#{$No}) {
+                            animation-delay: #{-1 - $No}s;
+                            animation-duration: #{4 + 3 * $No}s;
+                            fill: transparentize(color(main, index), 0.8 - 0.2 * $No);
+                        }
+                    }
+                    
+                }
+            }
+        }
+        @keyframes waving {
+            0% {
+                transform: translate3d(-90px,0,0);
+            }
+            100% { 
+                transform: translate3d(85px,0,0);
+            }
+        }
+        .footer-content {
+            position:relative;
+            height: 5%;
+            text-align: center;
+            background-color: color(main, index);
+        }
     }
 }

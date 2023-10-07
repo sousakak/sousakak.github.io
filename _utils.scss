@@ -25,6 +25,31 @@ $alphabet-font: 'Klee+One';
 $cursive-font: 'Sacramento', cursive;
 
 // colors
+$colors: (
+    normal: (
+        main-color: #00CED1, // DarkTurquoise
+        base-color: #E4E4E4,
+        accent-color: #8FBC8F // DarkSeaGreen
+    ),
+    index: (
+        main-color: #90F59A,
+        base-color: #E4E4E4,
+        accent-color: #90D1F5
+    )
+);
+
+@function color($type, $page: normal, $default: map-get(map-get($colors, normal), base-color)) {
+    @if map-has-key($colors, $page) {
+        @if map-has-key(map-get($colors, $page), $type + "-color") {
+            @return map-get(map-get($colors, $page), $type + "-color");
+        } @else {
+            @return $default;
+        }
+    } @else {
+        @warn "specified unexpected page: " + $page;
+        @return $default;
+    }
+}
 
 // images
 $background-image: url(background-image.jpg);
