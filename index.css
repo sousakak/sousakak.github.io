@@ -35,6 +35,12 @@
   left: 0;
   width: 100%;
 }
+.body .footer .footer-icon {
+  transition: all 0.2s 0s ease-out;
+}
+.body .footer .footer-icon:hover {
+  transform: scale(1.3);
+}
 
 .body .content-body::before {
   top: -3px;
