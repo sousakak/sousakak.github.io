@@ -1,6 +1,6 @@
 @use "utils" as *;
 
-// 言語分けをどうにかしてやりたい。
+// inputのチェックボックスを利用して言語選択可能に
 *[class^="en-"] {
     display: none;
 }
@@ -13,7 +13,34 @@
 
     .header {
         @extend %header;
-        height: 10%;
+        height: 10vmin;
+        display: flex;
+        justify-content: space-between;
+        z-index: 1;
+
+        .header-content-wrapper {
+            width: 5vmin;
+            padding: #{$header-gap};
+        }
+        
+        .header-menu {
+            @include headIcons(menu);
+        }
+
+        .menu {
+            .menu-icon:has(.menu-toggle:checked) + .menu-overlay {
+                display: block;
+                position: absolute;
+                top: 0;
+                left: 0;
+                width: 100vmin;
+                height: 100vmin;
+                z-index: 1;
+            }
+            .menu-icon:not(:has(.menu-toggle:checked)) + .menu-overlay {
+                display: none;
+            }
+        }
     }
 
     h2 {

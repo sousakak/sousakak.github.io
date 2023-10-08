@@ -9,7 +9,7 @@
 
 @charset "UTF-8";
 
-// meta functions
+/* meta functions */
 @function strip-unit($number) {
     @if type-of($number) == 'number' and not unitless($number) {
         @return $number / ($number * 0 + 1);
@@ -21,7 +21,7 @@
     @return calc($px / $base * 1rem);
 }
 
-// fonts
+/* fonts */
 @import url('https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c');
 @import url('https://fonts.googleapis.com/css?family=Sawarabi+Gothic');
 @import url('https://fonts.googleapis.com/css?family=Sacramento');
@@ -116,7 +116,7 @@ $breakpoints: (
     }
 }
 
-// colors
+/* colors */
 $colors: (
     normal: (
         main-color: #00CED1, // DarkTurquoise
@@ -143,13 +143,14 @@ $colors: (
     }
 }
 
-// images
+/* images */
 $background-image: url(background-image.jpg);
 
-// numerics
+/* numerics */
 $body-length: 100vmin;
 
-// components
+/* components */
+// layouts
 %body {
     position: relative;
     padding: 0;
@@ -162,6 +163,8 @@ $body-length: 100vmin;
     left: 0;
     width: 100%;
 }
+
+$header-gap: "calc((10vmin - 5vmin) / 2)";
 
 %footer {
     position: absolute;
@@ -177,6 +180,75 @@ $body-length: 100vmin;
     }
 }
 
+// parts
+@mixin headIcons($type) {
+    %lines {
+        position: absolute;
+        display: block;
+        width: 100%;
+        height: 2px;
+        transition: 0.15s ease-out;
+        background-color: #efefef;
+    }
+
+    @if $type == null {
+        @warn "type is null";
+    } @else if $type == menu {
+        & {
+            .header-menu-icon {
+                position: relative;
+                display: inline-block;
+                width: 5vmin;
+                height: 5vmin;
+                cursor: pointer;
+
+                & > .menu-toggle {
+                    position: absolute;
+                    left: 0;
+                    top: 0;
+                    width: 100%;
+                    height: 100%;
+                    z-index: 2;
+                    opacity: 0;
+                    cursor: pointer;
+                    &:checked ~ .header-menu-icon-line {
+                        width: 0;
+                        opacity: 0;
+                        transform: translateX(20px) rotate(90deg);
+                    }
+                    &:checked ~ .header-menu-icon-inner {
+                        &::before {
+                            width: 44px;
+                            transform: translateY(3vmin) translateX(0) rotate(-135deg);
+                        }
+                        &::after {
+                            width: 44px;
+                            transform: translateY(-1vmin) translateX(0) rotate(135deg);
+                        }
+                    }
+                }
+
+                &-line {
+                    top: 17px;
+                    @extend %lines;
+                }
+                &-inner {
+                    &::before {
+                        content: "";
+                        @extend %lines;
+                    }
+                    &::after {
+                        content: "";
+                        top: 34px;
+                        @extend %lines;
+                    }
+                }
+            }
+        }
+    }
+}
+
+// effects
 @mixin blur($image: $background-image) {
     background-image: $image;
     background-repeat: no-repeat;
@@ -196,7 +268,7 @@ $body-length: 100vmin;
     -webkit-backdrop-filter: blur(3px);
 }
 
-// events
+/* events */
 @mixin hover($ie: false) {
     &:focus {
         @content;

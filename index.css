@@ -7,6 +7,8 @@
 ██████╔╝░░░██║░░░░░░██║░░░███████╗███████╗██████╔╝██╗██████╔╝╚█████╔╝██████╔╝██████╔╝
 ╚═════╝░░░░╚═╝░░░░░░╚═╝░░░╚══════╝╚══════╝╚═════╝░╚═╝╚═════╝░░╚════╝░╚═════╝░╚═════╝░
 ************************************************************************************/
+/* meta functions */
+/* fonts */
 @import url("https://fonts.googleapis.com/css?family=M+PLUS+Rounded+1c");
 @import url("https://fonts.googleapis.com/css?family=Sawarabi+Gothic");
 @import url("https://fonts.googleapis.com/css?family=Sacramento");
@@ -16,6 +18,10 @@
   font-style: normal;
   src: url(/fonts/komorebi-gothic.ttf);
 }
+/* colors */
+/* images */
+/* numerics */
+/* components */
 .body {
   position: relative;
   padding: 0;
@@ -52,6 +58,7 @@
   -webkit-backdrop-filter: blur(3px);
 }
 
+/* events */
 *[class^=en-] {
   display: none;
 }
@@ -91,7 +98,74 @@
   }
 }
 .body .header {
-  height: 10%;
+  height: 10vmin;
+  display: flex;
+  justify-content: space-between;
+  z-index: 1;
+}
+.body .header .header-content-wrapper {
+  width: 5vmin;
+  padding: calc((10vmin - 5vmin) / 2);
+}
+.body .header .header-menu .header-menu-icon-inner::after, .body .header .header-menu .header-menu-icon-inner::before, .body .header .header-menu .header-menu-icon-line {
+  position: absolute;
+  display: block;
+  width: 100%;
+  height: 2px;
+  transition: 0.15s ease-out;
+  background-color: #efefef;
+}
+.body .header .header-menu .header-menu-icon {
+  position: relative;
+  display: inline-block;
+  width: 5vmin;
+  height: 5vmin;
+  cursor: pointer;
+}
+.body .header .header-menu .header-menu-icon > .menu-toggle {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  opacity: 0;
+  cursor: pointer;
+}
+.body .header .header-menu .header-menu-icon > .menu-toggle:checked ~ .header-menu-icon-line {
+  width: 0;
+  opacity: 0;
+  transform: translateX(20px) rotate(90deg);
+}
+.body .header .header-menu .header-menu-icon > .menu-toggle:checked ~ .header-menu-icon-inner::before {
+  width: 44px;
+  transform: translateY(3vmin) translateX(0) rotate(-135deg);
+}
+.body .header .header-menu .header-menu-icon > .menu-toggle:checked ~ .header-menu-icon-inner::after {
+  width: 44px;
+  transform: translateY(-1vmin) translateX(0) rotate(135deg);
+}
+.body .header .header-menu .header-menu-icon-line {
+  top: 17px;
+}
+.body .header .header-menu .header-menu-icon-inner::before {
+  content: "";
+}
+.body .header .header-menu .header-menu-icon-inner::after {
+  content: "";
+  top: 34px;
+}
+.body .header .menu .menu-icon:has(.menu-toggle:checked) + .menu-overlay {
+  display: block;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100vmin;
+  height: 100vmin;
+  z-index: 1;
+}
+.body .header .menu .menu-icon:not(:has(.menu-toggle:checked)) + .menu-overlay {
+  display: none;
 }
 .body h2 {
   font-family: "M PLUS Rounded 1c", sans-serif;
