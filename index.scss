@@ -23,6 +23,7 @@
 
     .content-body {
         @include blur($background-image) {
+            overflow-y: clip;
             &::before {
                 content: '';
                 position: absolute;
