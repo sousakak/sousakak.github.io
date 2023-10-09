@@ -35,7 +35,7 @@
     </head>
     <body>
         <div class="body index-body">
-            <div class="header">
+            <div class="header" data-component="header">
                 <div class="header-home header-content-wrapper">
                     <div class="header-home-icon header-icon">
                     </div>
@@ -46,34 +46,19 @@
                         <span class="menu-line header-menu-icon-line"></span>
                         <span class="menu-inner header-menu-icon-inner"></span>
                     </div>
-                    <div class="menu-overlay overlay-menu">
-                        あいうえお
-                        <br />
-                        かきくけこ
-                        <br />
-                        さしすせそ
-                        <br />
-                        たちつてと
-                        <br />
-                        なにぬねの
-                        <br />
-                        <hr />
-                        はひふへほ
-                        <br />
-                        まみむめも
-                        <br />
-                        や　ゆ　よ
-                        <br />
-                        らりるれろ
-                        <br />
-                        わゐ　ゑを
-                        <br />
-                        ん
+                    <div class="menu-overlay overlay-menu" data-component="overlay">
+                        <div class="flex-container menu-flex-container">
+                            <div class="menu-card-container">
+                                <div class="flex-glowcard flex-item menu-flex-item menu-card" data-component="glowcard">
+                                    わああ
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
             <div class="content-body content index-content" data-page="index.html">
-                <div class="content-titlebox">
+                <div class="content-titlebox" data-component="titlebox-index">
                     <h2 class="content-title">emptyCan</h2>
                     <hr />
                     <div class="content-subtitle">
@@ -82,7 +67,7 @@
                     </div>
                 </div>
             </div>
-            <div class="footer">
+            <div class="footer" data-component="footer">
                 <div class="waves-div">
                     <svg class="waves-svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
                         <defs>
@@ -109,6 +94,9 @@
                     </div>
                 </div>
             </div>
+        </div>
+        <div class="background-wrapper page-background-wrapper">
+            <div class="background page-background"></div>
         </div>
     </body>
 </html>

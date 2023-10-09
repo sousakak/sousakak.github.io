@@ -272,35 +272,99 @@ $header-gap: calc((#{$header-height} - 5vmin) / 2);
                 content: "";
                 animation: menuButtonOut 0.3s ease 0s 1 normal;
             }
+
+            @keyframes menuButtonOut {
+                0% {
+                    border-radius: 0vmin;
+                    width: $body-length;
+                    height: calc($body-length - 2 * 2px);
+                }
+            
+                100% {
+                    border-radius: calc($header-height / 2);
+                    width: $header-height;
+                    height: $header-height;
+                }
+            }
+            
+            @keyframes menuButton {
+                0% {
+                    border-radius: calc($header-height / 2);
+                    width: $header-height;
+                    height: $header-height;
+                }
+              
+                100% {
+                    border-radius: 0vmin;
+                    width: $body-length;
+                    height: calc($body-length - 2 * 2px);
+                }
+            }
         }
     }
 }
 
-@keyframes menuButtonOut {
-    0% {
-        border-radius: 0vmin;
-        width: $body-length;
-        height: calc($body-length - 2 * 2px);
-    }
-
-    100% {
-        border-radius: calc($header-height / 2);
-        width: $header-height;
-        height: $header-height;
-    }
+@property --rotate {
+    syntax: "<angle>";
+    initial-value: 132deg;
+    inherits: false;
 }
-
-@keyframes menuButton {
-    0% {
-        border-radius: calc($header-height / 2);
-        width: $header-height;
-        height: $header-height;
+@mixin glowcard($height, $color: darken(color(base), 70%)) {
+    @content;
+    background: $color;
+    width: calc($height / 1.5);
+    height: $height;
+    padding: 3px;
+    position: relative;
+    border-radius: 6px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: flex;
+    @include font-size();
+    color: $color;
+    cursor: pointer;
+    &::before {
+        content: "";
+        position: absolute;
+        top: -1%;
+        left: -2%;
+        width: 104%;
+        height: 102%;
+        border-radius: 8px;
+        background-image: linear-gradient(
+            var(--rotate)
+            , color(accent), mix(color(accent), color(main)) 43%, color(main));
+        animation: spin 2.5s linear infinite;
+        z-index: -1;
     }
-  
-    100% {
-        border-radius: 0vmin;
-        width: $body-length;
-        height: calc($body-length - 2 * 2px);
+    &::after {
+        content: "";
+        position: absolute;
+        top: calc($height / 6);
+        left: 0;
+        right: 0;
+        height: 100%;
+        width: 100%;
+        margin: 0 auto;
+        filter: blur(calc($height / 3));
+        background-image: linear-gradient(
+            var(--rotate)
+            , color(accent), mix(color(accent), color(main)) 43%, color(main));
+        opacity: 1;
+        transform: scale(0.8);
+        transition: opacity 0.5s;
+        animation: spin 2.5s linear infinite;
+        z-index: -1;
+    }
+
+    @keyframes spin {
+        0% {
+            --rotate: 0deg;
+        }
+        100% {
+            --rotate: 360deg;
+        }
     }
 }
 
