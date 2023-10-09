@@ -13,7 +13,6 @@
 
     .header {
         @extend %header;
-        height: 10vmin;
         display: flex;
         justify-content: space-between;
         z-index: 1;
@@ -33,12 +32,17 @@
                 position: absolute;
                 top: 0;
                 left: 0;
-                width: 100vmin;
-                height: 100vmin;
+                width: $body-length;
+                height: $body-length;
+                @include font-size();
+                padding: 1em;
+                opacity: 1;
+                transition: opacity 0.3s 0.15s ease-out;
                 z-index: 1;
             }
             .menu-icon:not(:has(.menu-toggle:checked)) + .menu-overlay {
-                display: none;
+                height: 0;
+                opacity: 0;
             }
         }
     }
@@ -84,7 +88,14 @@
     }
 
     .footer {
-        @extend %footer;
+        @include footer() {
+            .footer-icon {
+                transition: all 0.2s 0s ease-out;
+                @include hover{
+                    transform: scale(1.3);
+                };
+            }
+        };
         .waves-svg {
             position: relative;
             margin-bottom: -7px;

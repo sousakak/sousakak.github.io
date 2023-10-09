@@ -157,26 +157,27 @@ $body-length: 100vmin;
     margin: auto;
 }
 
+$header-height: 10vmin;
+
 %header {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
+    height: $header-height;
 }
 
-$header-gap: "calc((10vmin - 5vmin) / 2)";
+$header-gap: calc((#{$header-height} - 5vmin) / 2);
 
-%footer {
+@mixin footer() {
     position: absolute;
     bottom: 0;
     left: 0;
     width: 100%;
+    @content;
 
     .footer-icon {
         transition: all 0.2s 0s ease-out;
-        &:hover {
-            transform: scale(1.3);
-        }
     }
 }
 
@@ -188,7 +189,8 @@ $header-gap: "calc((10vmin - 5vmin) / 2)";
         width: 100%;
         height: 2px;
         transition: 0.15s ease-out;
-        background-color: #efefef;
+        background-color: darken($color: color(accent-color), $amount: 30%);
+        z-index: 2;
     }
 
     @if $type == null {
@@ -198,8 +200,8 @@ $header-gap: "calc((10vmin - 5vmin) / 2)";
             .header-menu-icon {
                 position: relative;
                 display: inline-block;
-                width: 5vmin;
-                height: 5vmin;
+                width: calc($header-height / 2);
+                height: calc($header-height / 2);
                 cursor: pointer;
 
                 & > .menu-toggle {
@@ -208,7 +210,7 @@ $header-gap: "calc((10vmin - 5vmin) / 2)";
                     top: 0;
                     width: 100%;
                     height: 100%;
-                    z-index: 2;
+                    z-index: 3;
                     opacity: 0;
                     cursor: pointer;
                     &:checked ~ .header-menu-icon-line {
@@ -218,12 +220,12 @@ $header-gap: "calc((10vmin - 5vmin) / 2)";
                     }
                     &:checked ~ .header-menu-icon-inner {
                         &::before {
-                            width: 44px;
-                            transform: translateY(3vmin) translateX(0) rotate(-135deg);
+                            width: calc(100% * sqrt(2));
+                            transform: translateY(2vmin) translateX(0) rotate(-135deg);
                         }
                         &::after {
-                            width: 44px;
-                            transform: translateY(-1vmin) translateX(0) rotate(135deg);
+                            width: calc(100% * sqrt(2));
+                            transform: translateY(-2vmin) translateX(0) rotate(135deg);
                         }
                     }
                 }
@@ -244,7 +246,61 @@ $header-gap: "calc((10vmin - 5vmin) / 2)";
                     }
                 }
             }
+
+            // transition: all 1s 0s ease-out;
+            &::before {
+                content: "";
+                display: block;
+                position: absolute;
+                top: 0;
+                right: 0;
+                width: $header-height;
+                height: $header-height;
+                border-radius: calc($header-height / 2);
+                background-color: rgba(color(base), 0.4);
+                backdrop-filter: blur(5px);
+                border: 2px rgba(color(base), 0.6) solid;
+            }
+            &:has(.menu-toggle:checked)::before {
+                content: "";
+                width: $body-length;
+                height: calc($body-length - 2 * 2px);
+                border-radius: 0px;
+                animation: menuButton 0.3s ease 0s 1 normal;
+            }
+            &:not(:has(.menu-toggle:checked))::before {
+                content: "";
+                animation: menuButtonOut 0.3s ease 0s 1 normal;
+            }
         }
+    }
+}
+
+@keyframes menuButtonOut {
+    0% {
+        border-radius: 0vmin;
+        width: $body-length;
+        height: calc($body-length - 2 * 2px);
+    }
+
+    100% {
+        border-radius: calc($header-height / 2);
+        width: $header-height;
+        height: $header-height;
+    }
+}
+
+@keyframes menuButton {
+    0% {
+        border-radius: calc($header-height / 2);
+        width: $header-height;
+        height: $header-height;
+    }
+  
+    100% {
+        border-radius: 0vmin;
+        width: $body-length;
+        height: calc($body-length - 2 * 2px);
     }
 }
 
