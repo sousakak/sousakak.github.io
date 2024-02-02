@@ -1,239 +1,33 @@
 @use "utils" as *;
+@use "sass:color";
+@use "sass:math";
 
-// inputのチェックボックスを利用して言語選択可能に
-*[class^="en-"] {
-    display: none;
-}
-
-.body {
-    @extend %body;
-    width: $body-length;
-    height: $body-length;
-    @include font-size();
-
-    .header {
-        @extend %header;
-        display: flex;
-        justify-content: space-between;
-        z-index: 1;
-
-        .header-content-wrapper {
-            width: 5vmin;
-            padding: #{$header-gap};
-        }
-        
-        .header-menu {
-            @include headIcons(menu);
-        }
-
-        .menu {
-            .menu-icon:has(.menu-toggle:checked) + .menu-overlay {
-                display: block;
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: calc($body-length - 2 * 1em);
-                height: calc($body-length - 2 * 1em);
-                @include font-size();
-                padding: 1em;
-                padding-top: calc(10vmin - 2px);
-                opacity: 1;
-                transition: opacity 0.3s 0.15s ease-out;
-                z-index: 1;
-                .menu-card {
-                    @include glowcard(30vmin) {
-                        @include hover {
-                            color: color(main);
-                            transition: color 1s;
-                            &::before, &::after {
-                                animation: none;
-                                opacity: 0;
-                            }
-                        };
-                    };
-                }
-            }
-            .menu-icon:not(:has(.menu-toggle:checked)) + .menu-overlay {
-                height: 0;
-                opacity: 0;
-            }
-        }
-    }
-
-    h2 {
-        font-family: $title-font;
-        @include font-size($ul: 30, $min: 14);
-    }
-
-    .content-body {
-        @include blur($background-image) {
-            overflow-y: clip;
-            &::before {
-                content: '';
-                position: absolute;
-                @extend %blur-before;
-                z-index: -1;
-            }
-        };
-
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        position: relative;
-        z-index: 0;
-
-        .content-titlebox {
-            position: absolute;
-            bottom: 15vmin;
-            left: 7.5vmin;
-            width: 35vmin;
-            padding: 0.3em;
-            background-color: rgba($color: #000000, $alpha: 0.4);
-            color: #dfdfdf;
-            .content-title {
-                font-weight: normal;
-            }
-            .content-subtitle {
-                @extend .content-title;
-                @include font-size($ul: 18, $min: 8);
-            }
-        }
-    }
-
-    .footer {
-        @include footer() {
-            .footer-icon {
-                transition: all 0.2s 0s ease-out;
-                @include hover{
-                    transform: scale(1.3);
-                };
-            }
-        };
-        .waves-svg {
-            position: relative;
-            margin-bottom: -7px;
-            width: 100%;
-            height: 10vmin;
-        }
-        .parallax {
-            & > use {
-                animation: waving 25s cubic-bezier(.55,.5,.45,.5) infinite;
-                @for $No from 1 through 4 {
-                    @if $No == 4 {
-                        &:nth-child(#{$No}) {
-                            animation-delay: #{-1 - $No}s;
-                            animation-duration: #{8 + 3 * $No}s;
-                            fill: transparentize(color(main, index), 0.8);
-                        }
-                    }
-                    @else {
-                        &:nth-child(#{$No}) {
-                            animation-delay: #{-1 - $No}s;
-                            animation-duration: #{4 + 3 * $No}s;
-                            fill: transparentize(color(main, index), 0.8 - 0.2 * $No);
-                        }
-                    }
-                    
-                }
-            }
-        }
-        @keyframes waving {
+/* background */
+.background-animation {
+    position: relative;
+    &-shape {
+        position: absolute;
+        left: 50%;
+        top: 50%;
+        width: 100vmin;
+        height: 100vmin;
+        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+        background-image: linear-gradient(color(accent), color.change(color(accent), $blue: calc(color.blue(color(accent)) / 3)));
+        filter: blur(calc(100vmin / 5));
+        animation: background-shape 10s cubic-bezier(0.8, 0.2, 0.2, 0.8) alternate infinite;
+        @keyframes background-shape {
             0% {
-                transform: translate3d(-90px,0,0);
-            }
-            100% { 
-                transform: translate3d(85px,0,0);
-            }
-        }
-        .footer-content {
-            position:relative;
-            height: 5vmin;
-            display: flex;
-            text-align: center;
-            background-color: color(main, index);
-            & > .footer-credit {
-                width: calc(100% - 50px);
-            }
-            & > .footer-links {
-                svg[class$="-icon"] {
-                    width: 3vmin;
-                    height: 3vmin;
-                }
-            }
-        }
-    }
-}
-
-.page-background-wrapper {
-    position: absolute;
-    inset: 0;
-    display: flex;
-    place-content: center;
-    align-items: center;
-    overflow: hidden;
-    .page-background {
-        @keyframes rotate {
-            0% {
-                transform: rotate(0deg);
-                transform: translate(-15vmin, 6vmin);
-            }
-            10% {
-                transform: rotate(36deg);
-                transform: translate(-59vmin, -38vmin);
-            }
-            20% {
-                transform: rotate(72deg);
-                transform: translate(-8vmin, -38vmin);
-            }
-            20% {
-                transform: rotate(108deg);
-                transform: translate(22vmin, -40vmin);
-            }
-            30% {
-                transform: rotate(144deg);
-                transform: translate(37vmin, -18vmin);
-            }
-            40% {
-                transform: rotate(180deg);
-                transform: translate(11vmin, -42vmin);
-            }
-            50% {
-                transform: rotate(216deg);
-                transform: translate(-35vmin, -66vmin);
-            }
-            60% {
-                transform: rotate(252deg);
-                transform: translate(41vmin, 18vmin);
-            }
-            70% {
-                transform: rotate(288deg);
-                transform: translate(78vmin, -10vmin);
-            }
-            80% {
-                transform: rotate(324deg);
-                transform: translate(-20vmin, -46vmin);
-            }
-            90% {
-                transform: rotate(360deg);
-                transform: translate(-61vmin, -23vmin);
+                transform: translate(-50%, -50%) rotate(0deg);
             }
             100% {
-                transform: rotate(360deg);
-                transform: translate(-41vmin, -66vmin);
+                transform: translate(-50%, -50%) rotate(360deg);
             }
         }
-        --size: 250px;
-        --easing: cubic-bezier(0.8, 0.2, 0.2, 0.8);
+    }
+}
 
-        width: 50vmin;
-        height: 50vmin;
-        border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-        background-image: linear-gradient(hsl(158, 82, 57, 85%), hsl(252, 82, 57));
-        filter: blur(calc(var(--size) / 5));
-        animation: rotate 5s cubic-bezier(0.8, 0.2, 0.2, 0.8) alternate infinite;
-        z-index: -1;
-    }
-    body:not(.enableBack) > & {
-        display: none;
-    }
+/* content */
+.top-card {
+    display: flex;
+    @include orientation();
 }

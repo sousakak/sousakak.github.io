@@ -6,8 +6,9 @@
 ██████╔╝░░░██║░░░░░░██║░░░███████╗███████╗██████╔╝██╗██████╔╝╚█████╔╝██████╔╝██████╔╝
 ╚═════╝░░░░╚═╝░░░░░░╚═╝░░░╚══════╝╚══════╝╚═════╝░╚═╝╚═════╝░░╚════╝░╚═════╝░╚═════╝░
 ************************************************************************************/
-
 @charset "UTF-8";
+@use "sass:map";
+@use "sass:meta";
 
 /* meta functions */
 @function strip-unit($number) {
@@ -37,103 +38,30 @@ $content-font: 'Komorebi Gothic', 'Sawarabi Gothic', sans-serif;
 $alphabet-font: 'Klee+One';
 $cursive-font: 'Sacramento', cursive;
 
-$breakpoints : (
-    list: (
-        300px, 347px, 395px, 442px, 490px
-    )
+$font-size: (
+    title: 3rem,
+    text: 1rem
 );
-
-$brakpoint-media: ( // The value of $breakpoints cannot be used if this is combined from the jump
-    media: (
-        xs:"only screen and (max-width: #{nth(map-get($breakpoints, list), 1)})",
-        xs-s:"only screen and (min-width: #{nth(map-get($breakpoints, list), 1) + 1}) and (max-width: #{nth(map-get($breakpoints, list),2)})",
-        s:"only screen and (max-width: #{nth(map-get($breakpoints, list), 2)})",
-        s-m:"only screen and (min-width: #{nth(map-get($breakpoints, list), 2) + 1}) and (max-width: #{nth(map-get($breakpoints, list),3)})",
-        m:"only screen and (max-width: #{nth(map-get($breakpoints, list), 3)})",
-        mmin:"only screen and (min-width: #{nth(map-get($breakpoints, list), 3)})",
-        m-l:"only screen and (min-width: #{nth(map-get($breakpoints, list), 3) + 1}) and (max-width: #{nth(map-get($breakpoints, list),4)})",
-        l:"only screen and (max-width: #{nth(map-get($breakpoints, list), 4)})",
-        lmin:"only screen and (min-width: #{nth(map-get($breakpoints, list), 4)})",
-        l-ul:"only screen and (min-width: #{nth(map-get($breakpoints, list), 4) + 1}) and (max-width: #{nth(map-get($breakpoints, list),5)})",
-        ul:"only screen and (max-width: #{nth(map-get($breakpoints, list), 5)})",
-        d:"only screen and (min-width: #{nth(map-get($breakpoints, list), 5) + 1})",
-    )
-);
-
-$breakpoints: (
-    map-merge($breakpoints, $brakpoint-media)
-);
-
-@mixin media($breakpoint) {
-    @media #{map-get(map-get($breakpoints, media), $breakpoint)} {
-        @content;
-    }
-}
-
-@function sizecalc($sizefrom, $sizeto, $vpfrom, $vpto) {
-    $size_diff : $sizeto - $sizefrom;
-    $vp-width-diff : strip-unit($vpto) - strip-unit($vpfrom);
-
-    $vp-width-min : calc(strip-unit($vpfrom) / 100 * 0.1rem);
-    $size-per-vp : calc(100 * $size_diff / $vp-width-diff);
-    $size-min : $sizefrom / 10 + 0rem;
-
-    @return calc(#{$size-min} + ((1vw - #{$vp-width-min}) * (#{$size-per-vp})));
-}
-
-@mixin font-size($ul: 16, $min: 10, $l: true, $m: true, $s: true, $xs: true) {
-    @if $l {
-        $l  : calc(($ul - $min) * (4 / 5) + $min);
-    }
-    @if $m {
-        $m  : calc(($ul - $min) * (3 / 5) + $min);
-    }
-    @if $s {
-        $s  : calc(($ul - $min) * (2 / 5) + $min);
-    }
-    @if $xs {
-        $xs : calc(($ul - $min) * (1 / 5) + $min);
-    }
-    & {
-        @include media(d) {
-            font-size: rem($ul);
-        }
-        @include media(l-ul) {
-            font-size: sizecalc($l, $ul, nth(map-get($breakpoints, list), 4) + 1, nth(map-get($breakpoints, list), 5));
-        }
-        @include media(m-l) {
-            font-size: sizecalc($m, $l, nth(map-get($breakpoints, list), 3) + 1, nth(map-get($breakpoints, list), 4));
-        }
-        @include media(s-m) {
-            font-size: sizecalc($s, $m, nth(map-get($breakpoints, list), 2) + 1, nth(map-get($breakpoints, list), 3));
-        }
-        @include media(xs-s) {
-            font-size: sizecalc($xs, $s, nth(map-get($breakpoints, list), 1) + 1, nth(map-get($breakpoints, list), 2));
-        }
-        @include media(xs) {
-            font-size: sizecalc(0, $xs, 0, nth(map-get($breakpoints, list), 1));
-        }
-    }
+@function fontsize($type) {
+    @return map.get($font-size, $type);
 }
 
 /* colors */
 $colors: (
     normal: (
-        main-color: #00CED1, // DarkTurquoise
-        base-color: #E4E4E4,
-        accent-color: #8FBC8F // DarkSeaGreen
-    ),
-    index: (
-        main-color: #90F59A,
-        base-color: #E4E4E4,
-        accent-color: #90D1F5
+        base-color: #6fa5ff,
+        main-color: #3039c9,
+        accent-color: #f640ff,
+        shadow-color: #1f2687,
+        white: #FFF,
+        black: #000
     )
 );
 
-@function color($type, $page: normal, $default: map-get(map-get($colors, normal), base-color)) {
-    @if map-has-key($colors, $page) {
-        @if map-has-key(map-get($colors, $page), $type + "-color") {
-            @return map-get(map-get($colors, $page), $type + "-color");
+@function color($type, $page: normal, $default: map.get(map.get($colors, normal), base-color)) {
+    @if map.has-key($colors, $page) {
+        @if map.has-key(map.get($colors, $page), $type + "-color") {
+            @return map.get(map.get($colors, $page), $type + "-color");
         } @else {
             @return $default;
         }
@@ -144,248 +72,126 @@ $colors: (
 }
 
 /* images */
-$background-image: url(background-image.jpg);
+$image-mt-kuruma: url(Mount_Kuruma.jpg);
 
-/* numerics */
-$body-length: 100vmin;
+/* layouts */
+@mixin orientation($reverse: false) {
+    @if $reverse {
+        @media (orientation: landscape) {
+            flex-direction: column;
+        }
+        @media (orientation: portrait) {
+            flex-direction: row;
+        }
+    } @else {
+        @media (orientation: landscape) {
+            flex-direction: row;
+        }
+        @media (orientation: portrait) {
+            flex-direction: column;
+        }
+    }
+}
 
-/* components */
-// layouts
-%body {
-    position: relative;
-    padding: 0;
+.background {
+    position: fixed;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.full-screen {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    height: 80vh;
+    width: 80vw;
     margin: auto;
 }
 
-$header-height: 10vmin;
-
-%header {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: $header-height;
-}
-
-$header-gap: calc((#{$header-height} - 5vmin) / 2);
-
-@mixin footer() {
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    @content;
-
-    .footer-icon {
-        transition: all 0.2s 0s ease-out;
+/* components */
+$components: (
+    "card": (
+        border-color: rgba(color(white), 0.2),
+        border-style: solid,
+        border-width: 1px,
+    )
+);
+$config: null !default;
+@function getConfig($property, $component: null) {
+    @if meta.global-variable-exists("components") {
+        @if $config == null {
+            @if $component {
+                $config: map.get($components, $component);
+            } @else {
+                @error 'Component not specified';
+                @return null;
+            }
+        }
+        @if $component {
+            @return map.get($components, $component, $property);
+        } @else {
+            @return map.get($config, $property);
+        }
+    } @else {
+        @error 'The "components" variable not defined';
     }
 }
 
-// parts
-@mixin headIcons($type) {
-    %lines {
-        position: absolute;
-        display: block;
-        width: 100%;
-        height: 2px;
-        transition: 0.15s ease-out;
-        background-color: darken($color: color(accent-color), $amount: 30%);
-        z-index: 2;
-    }
-
-    @if $type == null {
-        @warn "type is null";
-    } @else if $type == menu {
-        & {
-            .header-menu-icon {
-                position: relative;
-                display: inline-block;
-                width: calc($header-height / 2);
-                height: calc($header-height / 2);
-                cursor: pointer;
-
-                & > .menu-toggle {
-                    position: absolute;
-                    left: 0;
-                    top: 0;
-                    width: 100%;
-                    height: 100%;
-                    z-index: 3;
-                    opacity: 0;
-                    cursor: pointer;
-                    &:checked ~ .header-menu-icon-line {
-                        width: 0;
-                        opacity: 0;
-                        transform: translateX(20px) rotate(90deg);
-                    }
-                    &:checked ~ .header-menu-icon-inner {
-                        &::before {
-                            width: calc(100% * sqrt(2));
-                            transform: translateY(2vmin) translateX(0) rotate(-135deg);
-                        }
-                        &::after {
-                            width: calc(100% * sqrt(2));
-                            transform: translateY(-2vmin) translateX(0) rotate(135deg);
-                        }
-                    }
-                }
-
-                &-line {
-                    top: 17px;
-                    @extend %lines;
-                }
-                &-inner {
-                    &::before {
-                        content: "";
-                        @extend %lines;
-                    }
-                    &::after {
-                        content: "";
-                        top: 34px;
-                        @extend %lines;
-                    }
-                }
-            }
-
-            // transition: all 1s 0s ease-out;
-            &::before {
-                content: "";
-                display: block;
-                position: absolute;
-                top: 0;
-                right: 0;
-                width: $header-height;
-                height: $header-height;
-                border-radius: calc($header-height / 2);
-                background-color: rgba(color(base), 0.4);
-                backdrop-filter: blur(5px);
-                border: 2px rgba(color(base), 0.6) solid;
-            }
-            &:has(.menu-toggle:checked)::before {
-                content: "";
-                width: $body-length;
-                height: calc($body-length - 2 * 2px);
-                border-radius: 0px;
-                animation: menuButton 0.3s ease 0s 1 normal;
-            }
-            &:not(:has(.menu-toggle:checked))::before {
-                content: "";
-                animation: menuButtonOut 0.3s ease 0s 1 normal;
-            }
-
-            @keyframes menuButtonOut {
-                0% {
-                    border-radius: 0vmin;
-                    width: $body-length;
-                    height: calc($body-length - 2 * 2px);
-                }
-            
-                100% {
-                    border-radius: calc($header-height / 2);
-                    width: $header-height;
-                    height: $header-height;
-                }
-            }
-            
-            @keyframes menuButton {
-                0% {
-                    border-radius: calc($header-height / 2);
-                    width: $header-height;
-                    height: $header-height;
-                }
-              
-                100% {
-                    border-radius: 0vmin;
-                    width: $body-length;
-                    height: calc($body-length - 2 * 2px);
-                }
-            }
+.card {
+    $config: map.get($components, card);
+    padding: 0.75em;
+    border-radius: 10px;
+    border: getConfig(border-color, "card") getConfig(border-style, "card") getConfig(border-style, "card");
+    background: rgba(207, 207, 207, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(color(shadow), 0.37);
+    backdrop-filter: blur(3px);
+    -webkit-backdrop-filter: blur(3px);
+    &-title {
+        &-box {
+            display: flex;
+            height: 100%;
+            align-items: flex-end;
+            align-content: center;
+            text-align: center;
+            justify-content: center;
+            flex-wrap: wrap;
+            @include orientation(true);
+        }
+        &-text {
+            font-family: $title-font;
+            font-size: fontsize(title);
+        }
+        &-sub {
+            font-size: fontsize(text);
+        }
+        &-helper {
+            align-self: center;
+        }
+        &-icon {
+            width: 1.5em;
+            height: 1.5em;
         }
     }
 }
 
-@property --rotate {
-    syntax: "<angle>";
-    initial-value: 132deg;
-    inherits: false;
+.loading {
 }
-@mixin glowcard($height, $color: darken(color(base), 70%)) {
-    @content;
-    background: $color;
-    width: calc($height / 1.5);
-    height: $height;
-    padding: 3px;
-    position: relative;
-    border-radius: 6px;
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-    display: flex;
-    @include font-size();
-    color: $color;
-    cursor: pointer;
-    &::before {
-        content: "";
-        position: absolute;
-        top: -1%;
-        left: -2%;
-        width: 104%;
-        height: 102%;
-        border-radius: 8px;
-        background-image: linear-gradient(
-            var(--rotate)
-            , color(accent), mix(color(accent), color(main)) 43%, color(main));
-        animation: spin 2.5s linear infinite;
-        z-index: -1;
-    }
-    &::after {
-        content: "";
-        position: absolute;
-        top: calc($height / 6);
-        left: 0;
-        right: 0;
-        height: 100%;
-        width: 100%;
-        margin: 0 auto;
-        filter: blur(calc($height / 3));
-        background-image: linear-gradient(
-            var(--rotate)
-            , color(accent), mix(color(accent), color(main)) 43%, color(main));
-        opacity: 1;
-        transform: scale(0.8);
-        transition: opacity 0.5s;
-        animation: spin 2.5s linear infinite;
-        z-index: -1;
-    }
 
-    @keyframes spin {
+/* effects */
+@mixin rotate($name) {
+    @keyframes #{$name} {
         0% {
-            --rotate: 0deg;
+            transform: rotate(0deg);
+            @content;
         }
         100% {
-            --rotate: 360deg;
+            transform: rotate(360deg);
+            @content;
         }
     }
-}
-
-// effects
-@mixin blur($image: $background-image) {
-    background-image: $image;
-    background-repeat: no-repeat;
-    background-size: contain;
-    @content;
-}
-
-// <path d="M3.061616997868383e-15,50L-43.301270189221924,25.000000000000018L-43.30127018922194,-24.999999999999986L-9.184850993605149e-15,-50L43.30127018922192,-25.00000000000002L43.30127018922193,25L3.061616997868383e-15,50" fill="none" stroke="#3d7ea688"></path>
-
-%blur-before {
-    top: -3px;
-    bottom: -3px;
-    left: -3px;
-    right: -3px;
-    background: inherit;
-    filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
 }
 
 /* events */
@@ -405,4 +211,14 @@ $header-gap: calc((#{$header-height} - 5vmin) / 2);
             @content;
         }
     }
+}
+
+/* Others */
+::selection {
+    background-color: rgba(152, 251, 152, 0.3);
+    color: rgb(0, 128, 128);
+}
+
+*[class^="en-"] {
+    display: none;
 }
