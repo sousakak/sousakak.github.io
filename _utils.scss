@@ -9,6 +9,7 @@
 @charset "UTF-8";
 @use "sass:map";
 @use "sass:meta";
+@use "anime";
 
 /* meta functions */
 @function strip-unit($number) {
@@ -20,6 +21,15 @@
 
 @function rem($px, $base: 16) {
     @return calc($px / $base * 1rem);
+}
+
+@mixin keyframes($name) {
+    @-webkit-keyframes #{$name} {
+        @content;
+    }
+    @keyframes #{$name} {
+        @content;
+    }
 }
 
 /* fonts */
@@ -59,6 +69,7 @@ $colors: (
         accent-color: #f640ff,
         shadow-color: #1f2687,
         white-color: #FFF,
+        back-color: #CFCFCF,
         gray-color: #545454,
         black-color: #000
     )
@@ -99,14 +110,19 @@ $image-mt-kuruma: url(Mount_Kuruma.jpg);
     }
 }
 
-.background {
-    position: fixed;
+.full-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100vw;
     height: 100vh;
     overflow: hidden;
 }
+::-webkit-full-page-media, :future, :root .full-screen {
+    height: 100dvh;
+}
 
-.full-screen {
+.card-huge {
     position: absolute;
     top: 0;
     right: 0;
@@ -123,6 +139,11 @@ $components: (
         border-color: rgba(color(white), 0.2),
         border-style: solid,
         border-width: 1px,
+    ),
+    "loading": (
+        width: 50px,
+        flowing-width: 30, // this is a percentage of the orifice
+        perspective: 1000px
     )
 );
 $config: null !default;
@@ -146,12 +167,16 @@ $config: null !default;
     }
 }
 
+.background {
+    position: fixed;
+}
+
 .card {
-    $config: map.get($components, card);
+    $config: map.get($components, "card");
     padding: 0.75em;
     border-radius: 10px;
     border: getConfig(border-color, "card") getConfig(border-style, "card") getConfig(border-width, "card");
-    background: rgba(207, 207, 207, 0.3);
+    background: rgba(color(back), 0.3);
     box-shadow: 0 8px 32px 0 rgba(color(shadow), 0.37);
     backdrop-filter: blur(3px);
     -webkit-backdrop-filter: blur(3px);
@@ -176,9 +201,9 @@ $config: null !default;
                 display: inline-block;
                 width: 0.1rem;
                 height: 20rem;
+                background-color: color("gray");
                 -webkit-transform: translateY(-50%);
                 transform: translateY(-50%);
-                background-color: color("gray");
             }
         }
         &-text {
@@ -201,9 +226,298 @@ $config: null !default;
 }
 
 .loading {
+    $config: map.get($components, "card");
+
+    @extend .full-screen;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: color(back);
+    animation: fadeOut 1.5s 2.5s forwards;
+    &-icon {
+        $width: getConfig(width, "loading");
+        $height: calc($width * 7 / 5);
+        $orifice-width: calc($width / 5);
+        $orifice-height: calc($height * 3 / 35);
+        $perspective: getConfig(perspective, "loading");
+
+        position: relative;
+        .loading-hourglass {
+            &-container {
+                position: absolute;
+                top: calc(($width / 2) * -1);
+                left: calc(($height / 2) * -1);
+                width: $width;
+                height: $height;
+                -webkit-animation: hourglassRotate 2s ease-in 0s infinite;
+                animation: hourglassRotate 2s ease-in 0s infinite;
+                transform-style: preserve-3d;
+                perspective: $perspective;
+                & div,
+                & div:before,
+                & div:after {
+                    transform-style: preserve-3d;
+                }
+            }
+
+            &-curves {
+                @mixin hourglassCurves() {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    top: calc($height * 16 / 35);
+                    width: calc($width * 0.12);
+                    height: calc($width * 0.12);
+                    border-radius: 50%;
+                    background-color: color(gray);
+                    animation: hideCurves 2s ease-in 0s infinite;
+                }
+                &::before {
+                    @include hourglassCurves();
+                    left: calc($width * 0.3);
+                }
+                &::after {
+                    @include hourglassCurves();
+                    left: calc($width * 0.58);
+                }
+            }
+
+            &-glass-top {
+                transform: rotateX(90deg);
+                position: absolute;
+                top: calc(($height * 8 / 35) * -1);
+                left: calc($width * 0.06); // 6%
+                border-radius: 50%;
+                width: calc($width - ($width * 0.06 * 2)); // minus both 6% margin
+                height: calc($width - ($width * 0.06 * 2));
+                background-color: color(main);
+            }
+
+            &-sand {
+                @mixin hourglassSand() {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    left: calc(($width * 0.06) + ($width * 0.06)); // margin (6%) + padding (6%)
+                    background-color: color(accent);
+                    perspective: calc($perspective / 2);
+                }
+                &::before {
+                    @include hourglassSand();
+                    top: calc($height * 4 / 35);
+                    width: calc($width * 0.78);
+                    border-radius: calc($width * 0.06) calc($width * 0.06) calc($width * 0.6) calc($width * 0.6);
+                    animation: sandFillup 2s ease-in 0s infinite;
+                }
+                &::after {
+                    @include hourglassSand();
+                    border-radius: calc($width * 0.6) calc($width * 0.6) calc($width * 0.06) calc($width * 0.06);
+                    animation: sandDeplete 2s ease-in 0s infinite;
+                }
+            }
+
+                
+            &-sandStream {
+                @mixin hourglassSandStream() {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                }
+                &::before {
+                    @include hourglassSandStream();
+                    left: round(calc(($width - round($orifice-width * getConfig(flowing-width, "loading") / 100)) / 2));
+                    width: round(calc($orifice-width * getConfig(flowing-width, "loading") / 100));
+                    background-color: color(accent);
+                    -webkit-animation: sandStreamFall 2s ease-in 0s infinite;
+                    animation: sandStreamFall 2s ease-in 0s infinite;
+                }
+                &::after {
+                    @include hourglassSandStream();
+                    top: calc($height * 36 / 70);
+                    left: calc(($width / 2) - (($orifice-width * getConfig(flowing-width, "loading") / 100) * 2));
+                    border-left: calc(($orifice-width * getConfig(flowing-width, "loading") / 100) * 2) solid transparent;
+                    border-right: calc(($orifice-width * getConfig(flowing-width, "loading") / 100) * 2) solid transparent;
+                    border-bottom: calc(($orifice-width * getConfig(flowing-width, "loading") / 100) * 2) solid color(accent);
+                    animation: sandStreamSource 2s ease-in 0s infinite;
+                }
+            }
+            
+            &-glass-orifice {
+                position: absolute;
+                top: round(calc(($height - $orifice-height) / 2));
+                left: round(calc(($width - $orifice-width) / 2));
+                width: $orifice-width;
+                height: $orifice-height;
+                perspective: calc($perspective / 10);
+                background-color: color(main);
+                opacity: 0.5;
+                @mixin hourglassGlass() {
+                    content: '';
+                    display: block;
+                    position: absolute;
+                    background-color: color(main);
+                    left: calc($width * -0.34);
+                    width: calc($width * 0.88); // margin 6%
+                    height: calc($height * 0.4);
+                }
+                &::before {
+                    @include hourglassGlass();
+                    top: calc($height * -27 / 70);
+                    border-radius: 0 0 calc($width / 2) calc($width / 2);
+                }
+                &::after {
+                    @include hourglassGlass();
+                    bottom: calc($height * -27 / 70);
+                    border-radius: calc($width / 2) calc($width / 2) 0 0;
+                }
+            }
+        }
+
+        @include keyframes(hourglassRotate) {
+            0% {
+                transform: rotateX(0deg);
+            }
+            50% {
+                transform: rotateX(180deg);
+            }
+            100% {
+                transform: rotateX(180deg);
+            }
+        }
+
+        @include keyframes(hideCurves) {
+            0% {
+                opacity: 1;
+            }
+            25% {
+                opacity: 0;
+            }
+            30% {
+                opacity: 0;
+            }
+            40% {
+                opacity: 1;
+            }
+            100% {
+                opacity: 1;
+            }
+        }
+        
+        @include keyframes(sandStreamFall) {
+            0% {
+                height: calc(0);
+                top: round(calc($height / 2));
+            }
+            50% {
+                height: calc(0);
+                top: round(calc($height * 22.5 / 35));
+            }
+            60% {
+                height: calc($height / 2);
+                top: round(calc($height * 4 / 35));
+            }
+            85% {
+                height: calc($height / 2);
+                top: round(calc($height * 4 / 35));
+            }
+            100% {
+                height: 0;
+                top: round(calc($height * 4 / 35));
+            }
+        }
+        
+        @include keyframes(sandStreamSource) {
+            0% {
+                opacity: 0;
+            }
+            50% {
+                opacity: 0;
+            }
+            51% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            91% {
+                opacity: 0;
+            }
+            100% {
+                opacity: 0;
+            }
+        }
+        
+        @include keyframes(sandFillup) {
+            0% {
+                opacity: 0;
+                height: 0;
+            }
+            60% {
+                opacity: 1;
+                height: 0;
+            }
+            99% {
+                opacity: 1;
+                height: calc($height * 17 / 70);
+            }
+        }
+        
+        @include keyframes(sandDeplete) {
+            0% {
+                opacity: 0;
+                top: calc($height * 22.5 / 35);
+                height: calc($height * 17 / 70);
+                width: calc($width * 0.76);
+                left: calc($width * 0.12);
+            }
+            1% {
+                opacity: 1;
+                top: calc($height * 22.5 / 35);
+                height: calc($height * 17 / 70);
+                width: calc($width * 0.76);
+                left: calc($width * 0.12);
+            }
+            24% {
+                opacity: 1;
+                top: calc($height * 22.5 / 35);
+                height: calc($height * 17 / 70);
+                width: calc($width * 0.76);
+                left: calc($width * 0.12);
+            }
+            25% {
+                opacity: 1;
+                top: calc(($height * 22.5 / 35) - ($width * 0.06)); // minus 6% margin
+                height: calc($height * 17 / 70);
+                width: calc($width * 0.76);
+                left: calc($width * 0.12);
+            }
+            50% {
+                opacity: 1;
+                top: calc(($height * 22.5 / 35) - ($width * 0.06));
+                height: calc($height * 17 / 70);
+                width: calc($width * 0.76);
+                left: calc($width * 0.12);
+            }
+            90% {
+                opacity: 1;
+                top: calc(($height * 22.5 / 35) - ($width * 0.06));
+                height: 0;
+                width: calc($width * 0.2);
+                left: calc($width * 0.4);
+            }
+            100% {
+                opacity: 0;
+                top: calc(($height * 22.5 / 35) - ($width * 0.06));
+                height: 0;
+                width: calc($width * 0.2);
+                left: calc($width * 0.4);
+            }
+        }
+    }
 }
 
 /* effects */
+// for animations, please use anime.scss
 @mixin rotate($name) {
     @keyframes #{$name} {
         0% {

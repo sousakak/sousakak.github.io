@@ -1,6 +1,6 @@
-@use "utils" as *;
 @use "sass:color";
 @use "sass:math";
+@use "utils" as *;
 
 /* background */
 .background-animation {
@@ -12,7 +12,7 @@
         width: 100vmin;
         height: 100vmin;
         border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
-        background-image: linear-gradient(color(accent), color.change(color(accent), $blue: calc(color.blue(color(accent)) / 3)));
+        background-image: linear-gradient(color(base), color.change(color(base), $red: calc(color.red(color(accent)) / 3)));
         filter: blur(calc(100vmin / 5));
         animation: background-shape 10s cubic-bezier(0.8, 0.2, 0.2, 0.8) alternate infinite;
         @keyframes background-shape {
