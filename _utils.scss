@@ -282,7 +282,9 @@ $config: null !default;
             height: 70%;
         }
         & .card-text {
-            text-indent: 1em;
+            &[lang="ja"], & *[lang="ja"] {
+                text-indent: 1em;
+            }
         }
         .card-grid {
             display: grid;
@@ -615,3 +617,4 @@ $config: null !default;
 *[lang]:not([lang="ja"]) {
     display: none;
 }
+// plz upd 285 when lang feature implemented
