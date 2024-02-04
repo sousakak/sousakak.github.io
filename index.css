@@ -22,6 +22,29 @@
     visibility: hidden;
   }
 }
+@keyframes fluid {
+  0%, 100% {
+    border-radius: 63% 37% 54% 46%/55% 48% 52% 45%;
+  }
+  14% {
+    border-radius: 40% 60% 54% 46%/49% 60% 40% 51%;
+  }
+  28% {
+    border-radius: 54% 46% 38% 62%/49% 70% 30% 51%;
+  }
+  42% {
+    border-radius: 61% 39% 55% 45%/61% 38% 62% 39%;
+  }
+  56% {
+    border-radius: 61% 39% 67% 33%/70% 50% 50% 30%;
+  }
+  70% {
+    border-radius: 50% 50% 34% 66%/56% 68% 32% 44%;
+  }
+  84% {
+    border-radius: 46% 54% 50% 50%/35% 61% 39% 65%;
+  }
+}
 @font-face {
   font-family: "Komorebi Gothic";
   font-style: normal;
@@ -54,26 +77,24 @@
   margin: auto;
 }
 
+/* effects */
 /* components */
 .background {
   position: fixed;
 }
 
 .card {
-  padding: 0.75em;
   border-radius: 10px;
   border: rgba(255, 255, 255, 0.2) solid 1px;
   background: rgba(207, 207, 207, 0.3);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
-  backdrop-filter: blur(3px);
   -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+  padding: 0.75em;
 }
 .card-title-box {
   position: relative;
   display: flex;
-  height: 100%;
-  padding-right: 1.1rem;
-  margin-right: 1rem;
   align-items: flex-end;
   align-content: center;
   text-align: center;
@@ -90,16 +111,48 @@
     flex-direction: row;
   }
 }
+@media (orientation: landscape) {
+  .card-title-box {
+    width: 30%;
+    height: 100%;
+    padding-right: 1.1rem;
+    margin-right: 1rem;
+    row-gap: 1rem;
+  }
+}
+@media (orientation: portrait) {
+  .card-title-box {
+    width: 100%;
+    height: 30%;
+    padding-bottom: 1.1rem;
+    margin-bottom: 1rem;
+    -moz-column-gap: 1rem;
+         column-gap: 1rem;
+  }
+}
 .card-title-box:after {
   content: "";
   position: absolute;
-  right: 0;
-  top: 50%; /*線の上下位置*/
   display: inline-block;
-  width: 0.1rem;
-  height: 20rem;
   background-color: #545454;
-  transform: translateY(-50%);
+}
+@media (orientation: landscape) {
+  .card-title-box:after {
+    right: 0;
+    top: 50%; /*線の上下位置*/
+    width: 0.1rem;
+    height: 30vmin;
+    transform: translateY(-50%);
+  }
+}
+@media (orientation: portrait) {
+  .card-title-box:after {
+    bottom: 0;
+    left: 50%;
+    width: 30vmin;
+    height: 0.1rem;
+    transform: translateX(-50%);
+  }
 }
 .card-title-text {
   font-family: "M PLUS Rounded 1c", sans-serif;
@@ -110,12 +163,51 @@
   font-size: 1rem;
   color: #323232;
 }
+@media (orientation: portrait) {
+  .card-title-sub {
+    display: none;
+  }
+}
 .card-title-helper {
   align-self: center;
+}
+@media (orientation: portrait) {
+  .card-title-helper {
+    writing-mode: vertical-rl;
+  }
 }
 .card-title-icon {
   width: 1.5em;
   height: 1.5em;
+}
+@media (orientation: landscape) {
+  .card-content {
+    width: 70%;
+    height: 100%;
+  }
+}
+@media (orientation: portrait) {
+  .card-content {
+    width: 100%;
+    height: 70%;
+  }
+}
+.card-content .card-text {
+  text-indent: 1em;
+}
+.card-content .card-grid {
+  display: grid;
+}
+.card-content .card-card {
+  border-radius: 10px;
+  border: rgba(255, 255, 255, 0.2) solid 1px;
+  background: rgba(207, 207, 207, 0.3);
+  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
+  -webkit-backdrop-filter: blur(3px);
+  backdrop-filter: blur(3px);
+}
+.card-content .card-card-circle {
+  border-radius: 50%;
 }
 
 .loading {
@@ -173,7 +265,7 @@
   border-radius: 50%;
   width: 44px;
   height: 44px;
-  background-color: #3039c9;
+  background-color: #3a30c9;
 }
 .loading-icon .loading-hourglass-sand::before {
   content: "";
@@ -224,14 +316,14 @@
   width: 10px;
   height: 6px;
   perspective: 100px;
-  background-color: #3039c9;
+  background-color: #3a30c9;
   opacity: 0.5;
 }
 .loading-icon .loading-hourglass-glass-orifice::before {
   content: "";
   display: block;
   position: absolute;
-  background-color: #3039c9;
+  background-color: #3a30c9;
   left: -17px;
   width: 44px;
   height: 28px;
@@ -242,7 +334,7 @@
   content: "";
   display: block;
   position: absolute;
-  background-color: #3039c9;
+  background-color: #3a30c9;
   left: -17px;
   width: 44px;
   height: 28px;
@@ -385,7 +477,6 @@
   }
 }
 
-/* effects */
 /* events */
 /* Others */
 ::-moz-selection {
@@ -397,7 +488,7 @@
   color: rgb(0, 128, 128);
 }
 
-*[class^=en-] {
+*[lang]:not([lang=ja]) {
   display: none;
 }
 
@@ -412,9 +503,9 @@
   width: 100vmin;
   height: 100vmin;
   border-radius: 30% 70% 70% 30%/30% 30% 70% 70%;
-  background-image: linear-gradient(#6fa5ff, #52a5ff);
+  background-image: linear-gradient(#0019fc, #c819fc);
   filter: blur(20vmin);
-  animation: background-shape 10s cubic-bezier(0.8, 0.2, 0.2, 0.8) alternate infinite;
+  animation: background-shape 10s cubic-bezier(0.8, 0.2, 0.2, 0.8) alternate infinite, fluid 10s cubic-bezier(0.8, 0.2, 0.2, 0.8) alternate infinite;
 }
 @keyframes background-shape {
   0% {
@@ -437,5 +528,78 @@
 @media (orientation: portrait) {
   .top-card {
     flex-direction: column;
+  }
+}
+.top-card .card-grid {
+  height: 100%;
+  gap: 0;
+}
+@media (orientation: landscape) {
+  .top-card .card-grid {
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: auto repeat(3, 20vh);
+  }
+}
+.top-card .card-grid-item:nth-child(1) {
+  grid-row: 1;
+  grid-column: 1/4;
+}
+@media (orientation: portrait) {
+  .top-card .card-grid-item:nth-child(1) > *:not(p:first-of-type) {
+    display: none;
+  }
+}
+.top-card .card-grid-item:nth-child(2) {
+  grid-row: 2/4;
+  grid-column: 1/3;
+}
+@media (orientation: landscape) {
+  .top-card .card-grid-item:nth-child(2) {
+    width: 40dvh;
+    height: 40dvh;
+    margin: auto calc((100% - 40vh) / 2);
+  }
+}
+@media (orientation: portrait) {
+  .top-card .card-grid-item:nth-child(2) {
+    width: 53vw;
+    height: 53vw;
+    margin: calc((100% - 53vw) / 2) auto;
+  }
+}
+.top-card .card-grid-item:nth-child(3) {
+  grid-row: 3;
+  grid-column: 3;
+}
+@media (orientation: landscape) {
+  .top-card .card-grid-item:nth-child(3) {
+    width: 20dvh;
+    height: 20dvh;
+    margin: auto calc((100% - 20vh) / 2);
+  }
+}
+@media (orientation: portrait) {
+  .top-card .card-grid-item:nth-child(3) {
+    width: 27vw;
+    height: 27vw;
+    margin: calc((100% - 27vw) / 2) auto;
+  }
+}
+.top-card .card-grid-item:nth-child(4) {
+  grid-row: 4;
+  grid-column: 2;
+}
+@media (orientation: landscape) {
+  .top-card .card-grid-item:nth-child(4) {
+    width: 20dvh;
+    height: 20dvh;
+    margin: auto calc((100% - 20vh) / 2);
+  }
+}
+@media (orientation: portrait) {
+  .top-card .card-grid-item:nth-child(4) {
+    width: 27vw;
+    height: 27vw;
+    margin: calc((100% - 27vw) / 2) auto;
   }
 }/*# sourceMappingURL=index.css.map */

@@ -49,7 +49,8 @@ $alphabet-font: 'Komorebi Gothic', 'Sawarabi Gothic', sans-serif;
 $cursive-font: 'Sacramento', cursive;
 
 $font-size: (
-    title: 3rem,
+    head-title: 3rem,
+    title: 2rem,
     text: 1rem
 );
 @function fontsize($type) {
@@ -64,8 +65,8 @@ $font-color: (
 /* colors */
 $colors: (
     normal: (
-        base-color: #6fa5ff,
-        main-color: #3039c9,
+        base-color: #0019fc,
+        main-color: #3a30c9,
         accent-color: #f640ff,
         shadow-color: #1f2687,
         white-color: #FFF,
@@ -133,12 +134,36 @@ $image-mt-kuruma: url(Mount_Kuruma.jpg);
     margin: auto;
 }
 
+/* effects */
+$glass-border: rgba(color(white), 0.2) solid 1px;
+$glass-background: rgba(color(back), 0.3);
+
+// for animations, please use anime.scss
+@mixin rotate($name) {
+    @keyframes #{$name} {
+        0% {
+            transform: rotate(0deg);
+            @content;
+        }
+        100% {
+            transform: rotate(360deg);
+            @content;
+        }
+    }
+}
+
+@mixin glass() {
+    border-radius: 10px;
+    border: $glass-border;
+    background: $glass-background;
+    box-shadow: 0 8px 32px 0 rgba(color(shadow), 0.37);
+    -webkit-backdrop-filter: blur(3px);
+    backdrop-filter: blur(3px);
+}
+
 /* components */
 $components: (
     "card": (
-        border-color: rgba(color(white), 0.2),
-        border-style: solid,
-        border-width: 1px,
     ),
     "loading": (
         width: 50px,
@@ -173,54 +198,100 @@ $config: null !default;
 
 .card {
     $config: map.get($components, "card");
+
+    @include glass();
     padding: 0.75em;
-    border-radius: 10px;
-    border: getConfig(border-color, "card") getConfig(border-style, "card") getConfig(border-width, "card");
-    background: rgba(color(back), 0.3);
-    box-shadow: 0 8px 32px 0 rgba(color(shadow), 0.37);
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
     &-title {
         &-box {
             position: relative;
             display: flex;
-            height: 100%;
-            padding-right: 1.1rem;
-            margin-right: 1rem;
             align-items: flex-end;
             align-content: center;
             text-align: center;
             justify-content: center;
             flex-wrap: wrap;
             @include orientation(true);
+            @media (orientation: landscape) {
+                width: 30%;
+                height: 100%;
+                padding-right: 1.1rem;
+                margin-right: 1rem;
+                row-gap: 1rem;
+            }
+            @media (orientation: portrait) {
+                width: 100%;
+                height: 30%;
+                padding-bottom: 1.1rem;
+                margin-bottom: 1rem;
+                column-gap: 1rem;
+            }
             &:after {
                 content: "";
                 position: absolute;
-                right: 0;
-                top: 50%;/*線の上下位置*/
                 display: inline-block;
-                width: 0.1rem;
-                height: 20rem;
                 background-color: color("gray");
-                -webkit-transform: translateY(-50%);
-                transform: translateY(-50%);
+                @media (orientation: landscape) {
+                    right: 0;
+                    top: 50%;/*線の上下位置*/
+                    width: 0.1rem;
+                    height: 30vmin;
+                    -webkit-transform: translateY(-50%);
+                    transform: translateY(-50%);
+                }
+                @media (orientation: portrait) {
+                    bottom: 0;
+                    left: 50%;
+                    width: 30vmin;
+                    height: 0.1rem;
+                    -webkit-transform: translateX(-50%);
+                    transform: translateX(-50%);
+                }
             }
         }
         &-text {
             font-family: $title-font;
-            font-size: fontsize(title);
+            font-size: fontsize(head-title);
         }
         &-sub {
             font-family: $alphabet-font;
             font-size: fontsize(text);
             color: map.get($font-color, subtext);
+            @media (orientation: portrait) {
+                display: none;
+            }
         }
         &-helper {
             align-self: center;
+            @media (orientation: portrait) {
+                -ms-writing-mode: tb-rl;
+                writing-mode: vertical-rl;
+            }
         }
         &-icon {
             width: 1.5em;
             height: 1.5em;
+        }
+    }
+    &-content {
+        @media (orientation: landscape) {
+            width: 70%;
+            height: 100%;
+        }
+        @media (orientation: portrait) {
+            width: 100%;
+            height: 70%;
+        }
+        & .card-text {
+            text-indent: 1em;
+        }
+        .card-grid {
+            display: grid;
+        }
+        .card-card {
+            @include glass();
+            &-circle {
+                border-radius: 50%;
+            }
         }
     }
 }
@@ -516,21 +587,6 @@ $config: null !default;
     }
 }
 
-/* effects */
-// for animations, please use anime.scss
-@mixin rotate($name) {
-    @keyframes #{$name} {
-        0% {
-            transform: rotate(0deg);
-            @content;
-        }
-        100% {
-            transform: rotate(360deg);
-            @content;
-        }
-    }
-}
-
 /* events */
 @mixin hover($ie: false) {
     &:focus {
@@ -556,6 +612,6 @@ $config: null !default;
     color: rgb(0, 128, 128);
 }
 
-*[class^="en-"] {
+*[lang]:not([lang="ja"]) {
     display: none;
 }
