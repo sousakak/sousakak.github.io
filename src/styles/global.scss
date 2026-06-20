@@ -1,0 +1,15 @@
+@use "./variables" as *;
+@use "sass:map";
+
+body {
+    margin: 0;
+    background: map.get($colors, "bg");
+    color: map.get($colors, "text");
+    font-family: system-ui;
+    overflow: hidden;
+}
+
+::selection {
+    background: rgba(map.get($colors, "accent"), 0.4);
+    color: map.get($colors, "text");
+}
