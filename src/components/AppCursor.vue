@@ -10,6 +10,10 @@
     const isHoveringMenu = ref<boolean>(false);
     const isActivePress = ref<boolean>(false);
 
+    const pressProgress = ref<number>(0);
+
+    let animationFrameId: number | null = null;
+
     const handleMouseMove = (e: MouseEvent): void => {
         targetX.value = e.clientX;
         targetY.value = e.clientY;
@@ -19,7 +23,10 @@
         x.value += (targetX.value - x.value) * 0.12;
         y.value += (targetY.value - y.value) * 0.12;
 
-        requestAnimationFrame(animate);
+        const targetPress = isActivePress.value ? 1 : 0;
+        pressProgress.value += (targetPress - pressProgress.value) * 0.22;
+
+        animationFrameId = window.requestAnimationFrame(animate);
     };
 
     const handleMenuHover = (e: Event): void => {
@@ -27,27 +34,18 @@
         isHoveringMenu.value = custom.detail;
     };
 
-    const handleActiveStart = (): void => {
+    const handleMenuPressStart = (): void => {
         isActivePress.value = true;
     };
 
-    const handleActiveEnd = (): void => {
+    const handleMenuPressEnd = (): void => {
         isActivePress.value = false;
     };
 
     const cursorStyle = computed(() => {
-        let scale = 1;
-        let opacity = 1;
-
-        if (isHoveringMenu.value) {
-            scale = 2;
-            opacity = 0.5;
-        }
-
-        if (isActivePress.value) {
-            scale = 3;
-            opacity = 0;
-        }
+        const hoverScale = isHoveringMenu.value ? 2 : 1;
+        const scale = hoverScale + pressProgress.value;
+        const opacity = 1 - pressProgress.value;
 
         return {
             transform: `translate(${x.value}px, ${y.value}px) translate(-50%, -50%) scale(${scale})`,
@@ -58,21 +56,21 @@
     onMounted(() => {
         window.addEventListener("mousemove", handleMouseMove);
         window.addEventListener("menu-hover", handleMenuHover);
+        window.addEventListener("menu-press-start", handleMenuPressStart);
+        window.addEventListener("menu-press-end", handleMenuPressEnd);
 
-        window.addEventListener("pointerdown", handleActiveStart);
-        window.addEventListener("pointerup", handleActiveEnd);
-        window.addEventListener("pointercancel", handleActiveEnd);
-
-        requestAnimationFrame(animate);
+        animationFrameId = window.requestAnimationFrame(animate);
     });
 
     onUnmounted(() => {
         window.removeEventListener("mousemove", handleMouseMove);
         window.removeEventListener("menu-hover", handleMenuHover);
+        window.removeEventListener("menu-press-start", handleMenuPressStart);
+        window.removeEventListener("menu-press-end", handleMenuPressEnd);
 
-        window.removeEventListener("pointerdown", handleActiveStart);
-        window.removeEventListener("pointerup", handleActiveEnd);
-        window.removeEventListener("pointercancel", handleActiveEnd);
+        if (animationFrameId !== null) {
+            window.cancelAnimationFrame(animationFrameId);
+        }
     });
 </script>
 
@@ -99,7 +97,5 @@
         border-radius: map.get($scale, "radius", "full");
 
         pointer-events: none;
-
-        transition: opacity 0.2s ease;
     }
 </style>

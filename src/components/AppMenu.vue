@@ -1,5 +1,5 @@
 <script setup lang="ts">
-    const emitHover = (state: boolean) => {
+    const emitHover = (state: boolean): void => {
         window.dispatchEvent(
             new CustomEvent("menu-hover", {
                 detail: state
@@ -7,9 +7,15 @@
         );
     };
 
-    const handleClick = (): void => {
+    const emitPressStart = (): void => {
         window.dispatchEvent(
-            new CustomEvent("menu-click")
+            new CustomEvent("menu-press-start")
+        );
+    };
+
+    const emitPressEnd = (): void => {
+        window.dispatchEvent(
+            new CustomEvent("menu-press-end")
         );
     };
 </script>
@@ -17,11 +23,14 @@
 <template>
     <nav class="menu">
         <a
-            href="/"
+            href="#"
             class="menu-item"
             @mouseenter="emitHover(true)"
             @mouseleave="emitHover(false)"
-            @click="handleClick"
+            @pointerdown="emitPressStart"
+            @pointerup="emitPressEnd"
+            @pointerleave="emitPressEnd"
+            @pointercancel="emitPressEnd"
         >
             home
         </a>
@@ -31,7 +40,10 @@
             class="menu-item"
             @mouseenter="emitHover(true)"
             @mouseleave="emitHover(false)"
-            @click="handleClick"
+            @pointerdown="emitPressStart"
+            @pointerup="emitPressEnd"
+            @pointerleave="emitPressEnd"
+            @pointercancel="emitPressEnd"
         >
             about
         </a>
@@ -41,7 +53,10 @@
             class="menu-item"
             @mouseenter="emitHover(true)"
             @mouseleave="emitHover(false)"
-            @click="handleClick"
+            @pointerdown="emitPressStart"
+            @pointerup="emitPressEnd"
+            @pointerleave="emitPressEnd"
+            @pointercancel="emitPressEnd"
         >
             projects
         </a>
