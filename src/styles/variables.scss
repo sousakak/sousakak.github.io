@@ -1,0 +1,35 @@
+@use "sass:map";
+
+$colors: (
+    "bg": #05060a,
+    "text": #ffffff,
+    "accent": #a855f7,
+    "cursor": #ffffff
+);
+
+$scale: (
+    "space": (
+        "sm": 4px,
+        "md": 8px,
+        "lg": 16px,
+        "xl": 32px
+    ),
+    "radius": (
+        "sm": 4px,
+        "md": 8px,
+        "lg": 16px,
+        "full": 9999px
+    )
+);
+
+:root {
+    @each $key, $value in $colors {
+        --color-#{$key}: #{$value};
+    }
+
+    @each $group, $map in $scale {
+        @each $key, $value in $map {
+            --#{$group}-#{$key}: #{$value};
+        }
+    }
+}
