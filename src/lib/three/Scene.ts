@@ -1,52 +1,44 @@
 import * as THREE from "three";
 
-import { CameraManager } from "./camera";
-import { Globe } from "./globe";
+import { CameraManager } from "./Camera";
+import { Globe } from "./Globe";
+import { Renderer } from "./Renderer";
+import { Time } from "./Time";
 
 export default class Scene {
-    private readonly canvas: HTMLCanvasElement;
-
     private readonly scene: THREE.Scene;
+
     private readonly cameraManager: CameraManager;
-    private readonly renderer: THREE.WebGLRenderer;
+
+    private readonly renderer: Renderer;
 
     private readonly globe: Globe;
 
-    private readonly clock: THREE.Clock;
+    private readonly time: Time;
 
     private animationFrameId: number | null = null;
 
-    public constructor(canvas: HTMLCanvasElement) {
-        this.canvas = canvas;
+    public constructor(
+        canvas: HTMLCanvasElement
+    ) {
+        this.scene =
+            new THREE.Scene();
 
-        this.scene = new THREE.Scene();
+        this.cameraManager =
+            new CameraManager();
 
-        this.cameraManager = new CameraManager();
+        this.renderer =
+            new Renderer(canvas);
 
-        this.renderer = new THREE.WebGLRenderer({
-            canvas: this.canvas,
-            antialias: true,
-            alpha: true
-        });
-
-        this.renderer.setPixelRatio(
-            Math.min(window.devicePixelRatio, 2)
-        );
-
-        this.renderer.setSize(
-            window.innerWidth,
-            window.innerHeight
-        );
-
-        this.renderer.setClearColor(0x000000, 0);
-
-        this.globe = new Globe();
+        this.globe =
+            new Globe();
 
         this.scene.add(
             this.globe.object
         );
 
-        this.clock = new THREE.Clock();
+        this.time =
+            new Time();
 
         window.addEventListener(
             "resize",
@@ -59,8 +51,12 @@ export default class Scene {
     }
 
     public dispose(): void {
-        if (this.animationFrameId !== null) {
-            cancelAnimationFrame(this.animationFrameId);
+        if (
+            this.animationFrameId !== null
+        ) {
+            cancelAnimationFrame(
+                this.animationFrameId
+            );
         }
 
         window.removeEventListener(
@@ -68,34 +64,38 @@ export default class Scene {
             this.handleResize
         );
 
+        this.time.dispose();
+
         this.renderer.dispose();
 
         this.scene.clear();
     }
 
-    private readonly handleResize = (): void => {
-        this.cameraManager.resize();
+    private readonly handleResize =
+        (): void => {
+            this.cameraManager.resize();
 
-        this.renderer.setSize(
-            window.innerWidth,
-            window.innerHeight
-        );
-    };
+            this.renderer.resize();
+        };
 
-    private readonly render = (): void => {
-        this.animationFrameId =
-            requestAnimationFrame(this.render);
+    private readonly render =
+        (): void => {
+            this.animationFrameId =
+                requestAnimationFrame(
+                    this.render
+                );
 
-        const delta =
-            this.clock.getDelta();
+            this.time.update();
 
-        this.globe.update(delta);
+            this.globe.update(
+                this.time.delta
+            );
 
-        this.renderer.render(
-            this.scene,
-            this.cameraManager.camera
-        );
-    };
+            this.renderer.render(
+                this.scene,
+                this.cameraManager.camera
+            );
+        };
 
     public getScene(): THREE.Scene {
         return this.scene;
@@ -106,6 +106,6 @@ export default class Scene {
     }
 
     public getRenderer(): THREE.WebGLRenderer {
-        return this.renderer;
+        return this.renderer.instance;
     }
 }
