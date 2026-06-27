@@ -1,6 +1,8 @@
 ---
+import AppBackgroundCanvas from "../components/AppBackgroundCanvas.vue";
 import AppCursor from "../components/AppCursor.vue";
 import AppMenu from "../components/AppMenu.vue";
+
 import "../styles/global.scss";
 ---
 
@@ -27,6 +29,7 @@ import "../styles/global.scss";
         <meta name="format-detection" content="email=no,telephone=no,address=no">
 	</head>
 	<body>
+        <AppBackgroundCanvas client:load />
         <AppMenu client:load />
 		<slot />
 
