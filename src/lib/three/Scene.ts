@@ -88,7 +88,7 @@ export default class Scene {
             this.time.update();
 
             this.globe.update(
-                this.time.delta
+                this.time
             );
 
             this.renderer.render(

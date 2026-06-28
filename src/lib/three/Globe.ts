@@ -1,4 +1,5 @@
 import * as THREE from "three";
+import { Time } from "./Time";
 
 export class Globe {
     public readonly object: THREE.LineSegments;
@@ -26,8 +27,13 @@ export class Globe {
         );
     }
 
-    public update(delta: number): void {
-        this.object.rotation.y += delta * 0.15;
-        this.object.rotation.x += delta * 0.03;
+    public update(
+    time: Time
+    ): void {
+        this.object.rotation.y +=
+            time.delta * 0.15;
+
+        this.object.rotation.x +=
+            time.delta * 0.03;
     }
 }
