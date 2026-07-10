@@ -1,7 +1,7 @@
 import * as THREE from "three";
 
 import { CameraManager } from "./Camera";
-import { Globe } from "./Globe";
+import { Globe } from "./Globe/Globe";
 import { Renderer } from "./Renderer";
 import { Time } from "./Time";
 
