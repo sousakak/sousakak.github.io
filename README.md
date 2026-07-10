@@ -1,138 +1,187 @@
 # sousakak.github.io
-This is a personal website built with **Astro** and **Vue.js**, deployed on **GitHub Pages**.
+
+Personal website of **emptyCan**, built with **Astro**, **Vue 3**, **TypeScript**, and **Three.js**.
+
+The project focuses on creating a modern interactive experience while keeping the site statically generated and lightweight. UI components are written in Vue, while the animated background is rendered with Three.js using a modular architecture designed for future shader-based effects.
 
 ---
 
-## Tech Stack
+# Features
 
-- [Astro](https://astro.build/) — Static site generator
-- [Vue 3](https://vuejs.org/) — Interactive UI components
-- GitHub Pages — Hosting
+* Static site generation with Astro
+* Interactive UI components using Vue 3
+* TypeScript-first architecture
+* SCSS with centralized variables
+* Three.js animated background
+* Custom animated cursor
+* Responsive layout
+* Automatic deployment to GitHub Pages
 
 ---
 
-## Project Structure
+# Tech Stack
 
-```
+| Category     | Technology     |
+| ------------ | -------------- |
+| Framework    | Astro          |
+| UI           | Vue 3          |
+| Language     | TypeScript     |
+| Styling      | SCSS           |
+| 3D Rendering | Three.js       |
+| Hosting      | GitHub Pages   |
+| CI/CD        | GitHub Actions |
 
+---
+
+# Project Structure
+
+```text
 .
-├── src/
-│   ├── pages/        # File-based routing (/, /about, etc.)
-│   └── components/   # Vue & Astro components
 ├── dist/             # Distributed pages
+│
+├── public/           # Static assets
+│   └── data/
+│       └── coastline.json
+│
+├── src/
+│   ├── components/
+│   │   ├── AppBackgroundCanvas.vue
+│   │   ├── AppCursor.vue
+│   │   └── AppMenu.vue
+│   │
+│   ├── layouts/
+│   │   └── Layout.astro
+│   │
+│   ├── lib/
+│   │   ├── three/
+│   │   │   ├── Camera.ts
+│   │   │   ├── Renderer.ts
+│   │   │   ├── Scene.ts
+│   │   │   ├── Time.ts
+│   │   │   └── Globe/
+│   │   │       ├── Globe.ts
+│   │   │       ├── CoastlineGeometry.ts
+│   │   │       └── CoastlineMaterial.ts
+│   │   │
+│   │   └── utils/
+│   │       └── convertCoords.ts
+│   │
+│   ├── pages/
+│   │   └── index.astro
+│   │
+│   └── styles/
+│       ├── global.scss
+│       ├── index.scss
+│       ├── reset.css
+│       └── variables.scss
+│
 ├── astro.config.mjs  # Astro configuration
 ├── package.json
+├── tsconfig.json
 ├── LICENSE
-├── README.md
-└── .gitignore
-
-````
+└── README.md
+```
 
 ---
 
-## Development
-### Install dependencies
+# Development
+
+Install dependencies.
 
 ```bash
 npm install
-````
+```
 
-### Start local dev server
+Start the development server.
 
 ```bash
 npm run dev
 ```
 
-Then open:
+The site will be available at:
 
-```
+```text
 http://localhost:4321
 ```
 
 ---
 
-## Build
+# Build
 
-To generate static files:
+Generate the production build.
 
 ```bash
 npm run build
 ```
 
-Output will be in:
+The generated files will be placed in:
 
-```
+```text
 dist/
 ```
 
 ---
 
-## Vue in Astro
+# Architecture
 
-Vue components are used inside `.astro` files with hydration directives:
+The project separates rendering responsibilities into independent modules.
 
-```astro
----
-import Counter from '../components/Counter.vue';
----
-
-<Counter client:load />
+```text
+Three.js
+ ├── Camera
+ ├── Renderer
+ ├── Scene
+ ├── Time
+ └── Globe
+      ├── CoastlineGeometry
+      └── CoastlineMaterial
 ```
 
-### Hydration modes
-
-* `client:load` — load immediately
-* `client:idle` — load when idle
-* `client:visible` — load when visible
+This design keeps rendering components loosely coupled and simplifies future extensions.
 
 ---
 
-## Deployment (GitHub Pages)
+# Globe Rendering
 
-This site is deployed using GitHub Pages.
+The globe is generated from coastline GeoJSON data located in:
 
-### Important: `astro.config.mjs`
-
-For user site (`username.github.io`):
-
-```js
-export default defineConfig({
-  site: 'https://YOUR_USERNAME.github.io',
-});
+```text
+public/data/coastline.json
 ```
 
-For project site:
+The rendering pipeline is:
 
-```js
-export default defineConfig({
-  site: 'https://YOUR_USERNAME.github.io/REPO_NAME',
-  base: '/REPO_NAME/',
-});
+```text
+GeoJSON
+    ↓
+CoastlineGeometry
+    ↓
+THREE.LineSegments
+    ↓
+Scene
 ```
 
----
-
-## Build for GitHub Pages
-
-```bash
-npm run build
-```
-
-Then deploy the `dist/` folder via:
-
-* GitHub Actions (recommended)
-* or manual Pages deployment
+Using `THREE.LineSegments` avoids unintended connections between independent coastline features and provides a better foundation for future GPU-based particle effects.
 
 ---
 
-## Notes
+# Future Plans
 
-* Pages are created via file-based routing in `src/pages/`
-* `/about` → `src/pages/about.astro`
-* No router configuration required
-* Vue is used only for interactive parts
+* GLSL shader-based particle effects
+* Mouse interaction with coastline fragmentation
+* Interactive page transitions
+* Post-processing effects
+* Additional portfolio pages
+* Responsive improvements
 
 ---
 
-## License
-[MIT License](LICENSE)
+# Deployment
+
+The website is automatically deployed to GitHub Pages using GitHub Actions whenever changes are pushed to the main branch.
+
+---
+
+# License
+
+Released under the MIT License.
