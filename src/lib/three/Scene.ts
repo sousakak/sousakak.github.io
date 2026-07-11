@@ -2,10 +2,12 @@ import * as THREE from "three";
 
 import { CameraManager } from "./Camera";
 import { Globe } from "./Globe/Globe";
+import { Interaction } from "./Interaction";
 import { Renderer } from "./Renderer";
 import { Time } from "./Time";
 
 export default class Scene {
+
     private readonly scene: THREE.Scene;
 
     private readonly cameraManager: CameraManager;
@@ -14,45 +16,39 @@ export default class Scene {
 
     private readonly globe: Globe;
 
+    private readonly interaction: Interaction;
+
     private readonly time: Time;
-
-    private readonly mouse = new THREE.Vector2();
-
-    private readonly raycaster = new THREE.Raycaster();
 
     private animationFrameId: number | null = null;
 
     public constructor(
         canvas: HTMLCanvasElement
     ) {
-        this.scene =
-            new THREE.Scene();
 
-        this.cameraManager =
-            new CameraManager();
+        this.scene = new THREE.Scene();
 
-        this.renderer =
-            new Renderer(canvas);
+        this.cameraManager = new CameraManager();
 
-        this.globe =
-            new Globe();
+        this.renderer = new Renderer(
+            canvas
+        );
+
+        this.globe = new Globe();
 
         this.scene.add(
             this.globe.object
         );
 
-        this.time =
-            new Time();
+        this.interaction = new Interaction();
 
-        window.addEventListener(
-            "pointermove",
-            this.handlePointerMove
-        );
+        this.time = new Time();
 
         window.addEventListener(
             "resize",
             this.handleResize
         );
+
     }
 
     public start(): void {
@@ -60,106 +56,77 @@ export default class Scene {
     }
 
     public dispose(): void {
-        if (
-            this.animationFrameId !== null
-        ) {
+
+        if ( this.animationFrameId !== null ) {
             cancelAnimationFrame(
                 this.animationFrameId
             );
         }
 
         window.removeEventListener(
-            "pointermove",
-            this.handlePointerMove
-        );
-
-        window.removeEventListener(
             "resize",
             this.handleResize
         );
 
-        this.time.dispose();
-
+        this.interaction.dispose();
+        this.globe.dispose();
         this.renderer.dispose();
-
+        this.time.dispose();
         this.scene.clear();
+
     }
 
-    private readonly handlePointerMove =
-    (
-        event: PointerEvent
-    ): void => {
+    private readonly handleResize = (): void => {
 
-        this.mouse.set(
+        this.cameraManager.resize();
+        this.renderer.resize();
 
-            event.clientX /
-            window.innerWidth * 2 - 1,
+    };
 
-            -(
-                event.clientY /
-                window.innerHeight
-            ) * 2 + 1
+    private readonly render = (): void => {
 
-        );
-
-        this.raycaster.setFromCamera(
-            this.mouse,
-            this.cameraManager.camera
-        );
-
-        const intersects =
-            this.raycaster.intersectObject(
-                this.globe.hitObject,
-                false
+        this.animationFrameId =
+            requestAnimationFrame(
+                this.render
             );
 
-        if (
-            intersects.length === 0
-        ) {
-            return;
-        }
+        //----------------------------------
+        // Time
+        //----------------------------------
 
-        this.globe.setMouse(
-            intersects[0].point
+        this.time.update();
+
+        //----------------------------------
+        // Globe animation
+        //----------------------------------
+
+        this.globe.update(
+            this.time
+        );
+
+        //----------------------------------
+        // Mouse interaction
+        //----------------------------------
+
+        this.interaction.update(
+            this.cameraManager.camera,
+            this.globe.hitObject
+        );
+
+        this.globe.setInteraction(
+            this.interaction.intersection,
+            this.interaction.velocity
+        );
+
+        //----------------------------------
+        // Render
+        //----------------------------------
+
+        this.renderer.render(
+            this.scene,
+            this.cameraManager.camera
         );
 
     };
 
-    private readonly handleResize =
-        (): void => {
-            this.cameraManager.resize();
-
-            this.renderer.resize();
-        };
-
-    private readonly render =
-        (): void => {
-            this.animationFrameId =
-                requestAnimationFrame(
-                    this.render
-                );
-
-            this.time.update();
-
-            this.globe.update(
-                this.time
-            );
-
-            this.renderer.render(
-                this.scene,
-                this.cameraManager.camera
-            );
-        };
-
-    public getScene(): THREE.Scene {
-        return this.scene;
-    }
-
-    public getCamera(): THREE.PerspectiveCamera {
-        return this.cameraManager.camera;
-    }
-
-    public getRenderer(): THREE.WebGLRenderer {
-        return this.renderer.instance;
-    }
 }

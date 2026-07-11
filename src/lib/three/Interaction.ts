@@ -8,9 +8,11 @@ export class Interaction {
 
     private readonly previousMouse: THREE.Vector2;
 
-    public readonly point: THREE.Vector3;
-
     public readonly velocity: THREE.Vector2;
+
+    public intersection:
+        THREE.Intersection |
+        null = null;
 
     public constructor() {
 
@@ -23,9 +25,6 @@ export class Interaction {
         this.previousMouse =
             new THREE.Vector2();
 
-        this.point =
-            new THREE.Vector3();
-
         this.velocity =
             new THREE.Vector2();
 
@@ -36,30 +35,25 @@ export class Interaction {
 
     }
 
-    private readonly handlePointerMove =
-        (
-            event: PointerEvent
-        ): void => {
+    private readonly handlePointerMove = (
+        event: PointerEvent
+    ): void => {
 
-            this.mouse.set(
+        this.mouse.set(
+            event.clientX / window.innerWidth * 2 - 1,
+            -( event.clientY / window.innerHeight ) * 2 + 1
+        );
 
-                event.clientX
-                / window.innerWidth
-                * 2 - 1,
-
-                -(
-                    event.clientY
-                    / window.innerHeight
-                ) * 2 + 1
-
-            );
-
-        };
+    };
 
     public update(
         camera: THREE.Camera,
         object: THREE.Object3D
     ): void {
+
+        //----------------------------------
+        // Mouse velocity
+        //----------------------------------
 
         this.velocity.subVectors(
             this.mouse,
@@ -70,36 +64,31 @@ export class Interaction {
             this.mouse
         );
 
+        //----------------------------------
+        // Raycast
+        //----------------------------------
+
         this.raycaster.setFromCamera(
             this.mouse,
             camera
         );
 
-        const intersects =
+        const intersections =
             this.raycaster.intersectObject(
                 object,
-                true
+                false
             );
 
-        if (
-            intersects.length === 0
-        ) {
-            return;
-        }
-
-        this.point.copy(
-            intersects[0].point
-        );
-
+        this.intersection = intersections.length > 0
+            ? intersections[0]
+            : null;
     }
 
     public dispose(): void {
-
         window.removeEventListener(
             "pointermove",
             this.handlePointerMove
         );
-
     }
 
 }

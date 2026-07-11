@@ -1,78 +1,73 @@
 import * as THREE from "three";
-import { lonLatToVector3 } from "../../utils/convertCoords";
 import type {
     FeatureCollection,
     LineString,
     MultiLineString
 } from "geojson";
 
-export class CoastlineGeometry extends THREE.BufferGeometry {
+import { lonLatToVector3 } from "../../utils/convertCoords";
+
+export class CoastlineGeometry
+    extends THREE.BufferGeometry {
 
     private readonly radius: number;
 
-    public constructor(
-        radius: number
-    ) {
+    public constructor( radius: number ) {
         super();
-
         this.radius = radius;
     }
 
     public async load(): Promise<void> {
-        const response =
-            await fetch("/data/coastline.json");
+
+        const response = await fetch(
+            "/data/coastline.json"
+        );
 
         const geoJson =
             await response.json() as FeatureCollection<
-                LineString |
-                MultiLineString
+                LineString | MultiLineString
             >;
 
-        this.build( geoJson );
+        this.build(
+            geoJson
+        );
+
     }
 
     private build(
         geoJson: FeatureCollection<
-            LineString |
-            MultiLineString
+            LineString | MultiLineString
         >
     ): void {
 
         const positions: number[] = [];
+        const tangents: number[] = [];
         const randoms: number[] = [];
 
-        for (
-            const feature
-            of geoJson.features
-        ) {
+        for ( const feature of geoJson.features ) {
 
-            const geometry =
-                feature.geometry;
-
-            switch (
-                geometry.type
-            ) {
+            switch ( feature.geometry.type ) {
 
                 case "LineString":
                     this.pushLine(
+                        feature.geometry.coordinates,
                         positions,
-                        randoms,
-                        geometry.coordinates
+                        tangents,
+                        randoms
                     );
                     break;
 
                 case "MultiLineString":
                     for (
                         const line
-                        of geometry.coordinates
+                        of feature.geometry.coordinates
                     ) {
-
                         this.pushLine(
+                            line,
                             positions,
-                            randoms,
-                            line
+                            tangents,
+                            randoms
                         );
-
                     }
                     break;
 
@@ -89,7 +84,15 @@ export class CoastlineGeometry extends THREE.BufferGeometry {
         );
 
         this.setAttribute(
-            "randomDirection",
+            "tangent",
+            new THREE.Float32BufferAttribute(
+                tangents,
+                3
+            )
+        );
+
+        this.setAttribute(
+            "random",
             new THREE.Float32BufferAttribute(
                 randoms,
                 3
@@ -99,19 +102,28 @@ export class CoastlineGeometry extends THREE.BufferGeometry {
     }
 
     private pushLine(
+        coordinates: number[][],
         positions: number[],
-        randoms: number[],
-        coordinates: number[][]
+        tangents: number[],
+        randoms: number[]
     ): void {
 
-        for ( const coordinate of coordinates ) {
-
-            const point =
+        const points = coordinates.map(
+            ([longitude, latitude]) =>
                 lonLatToVector3(
                     this.radius,
-                    coordinate[0],
-                    coordinate[1]
-                );
+                    longitude,
+                    latitude
+                )
+        );
+
+        for (
+            let i = 0;
+            i < points.length;
+            i++
+        ) {
+
+            const point = points[i];
 
             positions.push(
                 point.x,
@@ -120,23 +132,85 @@ export class CoastlineGeometry extends THREE.BufferGeometry {
             );
 
             //----------------------------------
-            // Random direction
+            // Tangent
             //----------------------------------
 
-            const direction =
-                new THREE.Vector3(
-                    Math.random() * 2 - 1,
-                    Math.random() * 2 - 1,
-                    Math.random() * 2 - 1
-                ).normalize();
+            let tangent: THREE.Vector3;
+
+            if (i === 0) {
+                tangent =
+                    points[1]
+                        .clone()
+                        .sub(point);
+            }
+            else if ( i === points.length - 1 ) {
+                tangent = point
+                    .clone()
+                    .sub(
+                        points[i - 1]
+                    );
+            }
+            else {
+                tangent = points[i + 1]
+                    .clone()
+                    .sub(
+                        points[i - 1]
+                    );
+            }
+
+            tangent.normalize();
+
+            tangents.push(
+                tangent.x,
+                tangent.y,
+                tangent.z
+            );
+
+            //----------------------------------
+            // Stable random
+            //----------------------------------
+
+            const longitude = coordinates[i][0];
+            const latitude = coordinates[i][1];
 
             randoms.push(
-                direction.x,
-                direction.y,
-                direction.z
+                this.hash(
+                    longitude,
+                    latitude,
+                    0.0
+                ),
+                this.hash(
+                    longitude,
+                    latitude,
+                    1.0
+                ),
+                this.hash(
+                    longitude,
+                    latitude,
+                    2.0
+                )
             );
 
         }
+
+    }
+
+    private hash(
+        longitude: number,
+        latitude: number,
+        seed: number
+    ): number {
+
+        const value = Math.sin(
+            longitude * 127.1 +
+            latitude * 311.7 +
+            seed * 74.7
+        ) * 43758.5453123;
+
+        return (
+            value -
+            Math.floor(value)
+        ) * 2.0 - 1.0;
 
     }
 
