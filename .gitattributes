@@ -1,0 +1,2 @@
+*.vert linguist-language=GLSL
+*.glsl linguist-language=GLSL
