@@ -8,13 +8,13 @@ export class Globe {
 
     public readonly object: THREE.Group;
 
-    private readonly radius: number = 1.0;
+    private readonly radius = 1.0;
 
     private readonly material: CoastlineMaterial;
 
-    private geometry: CoastlineGeometry | null = null;
+    private readonly geometries: THREE.BufferGeometry[] = [];
 
-    private points: THREE.Points | null = null;
+    private readonly points: THREE.Points;
 
     private readonly hitSphere: THREE.Mesh;
 
@@ -34,7 +34,18 @@ export class Globe {
             })
         );
 
-        this.object.add( this.hitSphere );
+        this.object.add(
+            this.hitSphere
+        );
+
+        this.points = new THREE.Points(
+            new THREE.BufferGeometry(),
+            this.material
+        );
+
+        this.object.add(
+            this.points
+        );
 
         void this.load();
 
@@ -42,18 +53,17 @@ export class Globe {
 
     private async load(): Promise<void> {
 
-        this.geometry = new CoastlineGeometry(
+        const geometry = new CoastlineGeometry(
             this.radius
         );
 
-        await this.geometry.load();
+        await geometry.load();
 
-        this.points = new THREE.Points(
-            this.geometry,
-            this.material
+        this.geometries.push(
+            geometry
         );
 
-        this.object.add( this.points );
+        this.points.geometry = geometry;
 
     }
 
@@ -62,29 +72,35 @@ export class Globe {
     }
 
     public setInteraction(
-        intersection: THREE.Intersection | null,
-        velocity: THREE.Vector2
+        point: THREE.Vector3,
+        velocity: THREE.Vector3
     ): void {
 
-        if (
-            intersection === null ||
-            this.points === null
-        ) {
-            return;
-        }
-
         //----------------------------------
-        // World to Points local
+        // World → Local
         //----------------------------------
 
-        const localPoint =
-            this.points.worldToLocal(
-                intersection.point.clone()
-            );
+        const localPoint = this.object.worldToLocal(
+            point.clone()
+        );
+
+        const localEnd = this.object.worldToLocal(
+            point.clone().add(
+                velocity
+            )
+        );
+
+        const localVelocity = localEnd.sub(
+            localPoint
+        );
+
+        //----------------------------------
+        // Shader uniforms
+        //----------------------------------
 
         this.material.setInteraction(
             localPoint,
-            velocity
+            localVelocity
         );
 
     }
@@ -100,11 +116,9 @@ export class Globe {
         this.object.rotation.y +=
             time.delta * 0.12;
 
-        this.object.rotation.x =
-            Math.sin(
-                performance.now()
-                * 0.00015
-            ) * 0.15;
+        this.object.rotation.x = Math.sin(
+            performance.now() * 0.00015
+        ) * 0.15;
 
         this.object.rotation.z +=
             time.delta * 0.08;
@@ -113,7 +127,13 @@ export class Globe {
 
     public dispose(): void {
 
-        this.geometry?.dispose();
+        for (
+            const geometry
+            of this.geometries
+        ) {
+            geometry.dispose();
+        }
+
         this.material.dispose();
 
     }

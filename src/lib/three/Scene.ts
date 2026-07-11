@@ -114,8 +114,8 @@ export default class Scene {
         );
 
         this.globe.setInteraction(
-            this.interaction.intersection,
-            this.interaction.velocity
+            this.interaction.point,
+            this.interaction.smoothedVelocity
         );
 
         //----------------------------------

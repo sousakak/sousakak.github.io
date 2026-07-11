@@ -1,24 +1,12 @@
+attribute vec3 tangent;
+attribute vec3 random;
+
 uniform float uTime;
 uniform vec3 uMouse;
+uniform vec3 uVelocity;
 uniform float uRadius;
-
-float random(
-    vec2 st
-) {
-
-    return fract(
-        sin(
-            dot(
-                st,
-                vec2(
-                    12.9898,
-                    78.233
-                )
-            )
-        ) * 43758.5453123
-    );
-
-}
+uniform float uScatter;
+uniform float uPointSize;
 
 void main() {
 
@@ -38,75 +26,77 @@ void main() {
     );
 
     //----------------------------------
-    // Sphere normal vector
-    //----------------------------------
-
-    vec3 normal = normalize( position );
-
-    //----------------------------------
-    // Build tangent basis
-    //----------------------------------
-
-    vec3 helper = abs( normal.y ) > 0.99
-        ? vec3(
-            1.0,
-            0.0,
-            0.0
-        )
-        : vec3(
-            0.0,
-            1.0,
-            0.0
-        );
-
-    vec3 tangent = normalize(
-        cross(
-            helper,
-            normal
-        )
-    );
-
-    vec3 bitangent = normalize(
-        cross(
-            normal,
-            tangent
-        )
-    );
-
-    //----------------------------------
-    // Random angle
-    //----------------------------------
-
-    float angle = random( position.xy ) * 6.28318530718;
-
-    //----------------------------------
     // Tangent direction
     //----------------------------------
 
-    vec3 tangentDirection = tangent * cos(angle)
-        + bitangent * sin(angle);
+    vec3 tangentDirection =
+        normalize(
+            tangent
+        );
 
     //----------------------------------
-    // Slightly outward
+    // Mouse velocity
     //----------------------------------
 
-    vec3 direction = normalize(
-        tangentDirection + normal * 0.25
-    );
+    vec3 velocityDirection =
+        vec3( 0.0 );
+
+    float velocityLength =
+        length(
+            uVelocity
+        );
+
+    if (
+        velocityLength > 0.00001
+    ) {
+        velocityDirection =
+            uVelocity /
+            velocityLength;
+    }
 
     //----------------------------------
-    // Displacement and transformation
+    // Random jitter
     //----------------------------------
 
-    vec3 transformed = position
-        + direction * influence * 0.15;
+    vec3 randomDirection =
+        normalize(
+            random
+        );
 
-    gl_Position = projectionMatrix * modelViewMatrix
-        * vec4(
+    //----------------------------------
+    // Final offset
+    //----------------------------------
+
+    vec3 offset =
+        tangentDirection
+            * influence
+            * uScatter
+
+        + velocityDirection
+            * influence
+            * 0.03
+
+        + randomDirection
+            * influence
+            * 0.02;
+
+    //----------------------------------
+    // Position
+    //----------------------------------
+
+    vec3 transformed =
+        position +
+        offset;
+
+    gl_Position =
+        projectionMatrix *
+        modelViewMatrix *
+        vec4(
             transformed,
             1.0
         );
 
-    gl_PointSize = 1.5;
+    gl_PointSize =
+        uPointSize;
 
 }

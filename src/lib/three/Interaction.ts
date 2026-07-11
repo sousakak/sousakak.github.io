@@ -6,13 +6,15 @@ export class Interaction {
 
     private readonly mouse: THREE.Vector2;
 
-    private readonly previousMouse: THREE.Vector2;
+    private readonly previousPoint: THREE.Vector3;
 
-    public readonly velocity: THREE.Vector2;
+    public readonly point: THREE.Vector3;
 
-    public intersection:
-        THREE.Intersection |
-        null = null;
+    public readonly velocity: THREE.Vector3;
+
+    public readonly smoothedVelocity: THREE.Vector3;
+
+    private readonly smoothing = 0.18;
 
     public constructor() {
 
@@ -22,11 +24,17 @@ export class Interaction {
         this.mouse =
             new THREE.Vector2();
 
-        this.previousMouse =
-            new THREE.Vector2();
+        this.previousPoint =
+            new THREE.Vector3();
+
+        this.point =
+            new THREE.Vector3();
 
         this.velocity =
-            new THREE.Vector2();
+            new THREE.Vector3();
+
+        this.smoothedVelocity =
+            new THREE.Vector3();
 
         window.addEventListener(
             "pointermove",
@@ -51,37 +59,56 @@ export class Interaction {
         object: THREE.Object3D
     ): void {
 
-        //----------------------------------
-        // Mouse velocity
-        //----------------------------------
-
-        this.velocity.subVectors(
-            this.mouse,
-            this.previousMouse
-        );
-
-        this.previousMouse.copy(
-            this.mouse
-        );
-
-        //----------------------------------
-        // Raycast
-        //----------------------------------
-
         this.raycaster.setFromCamera(
             this.mouse,
             camera
         );
 
-        const intersections =
+        const intersects =
             this.raycaster.intersectObject(
                 object,
                 false
             );
 
-        this.intersection = intersections.length > 0
-            ? intersections[0]
-            : null;
+        if (
+            intersects.length === 0
+        ) {
+            return;
+        }
+
+        const hit = intersects[0].point;
+
+        //----------------------------------
+        // Raw velocity
+        //----------------------------------
+
+        this.velocity
+            .copy( hit )
+            .sub(
+                this.previousPoint
+            );
+
+        //----------------------------------
+        // Smoothed velocity
+        //----------------------------------
+
+        this.smoothedVelocity.lerp(
+            this.velocity,
+            this.smoothing
+        );
+
+        //----------------------------------
+        // Store current point
+        //----------------------------------
+
+        this.previousPoint.copy(
+            hit
+        );
+
+        this.point.copy(
+            hit
+        );
+
     }
 
     public dispose(): void {
