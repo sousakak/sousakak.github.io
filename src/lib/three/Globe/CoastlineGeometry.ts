@@ -20,7 +20,7 @@ export class CoastlineGeometry extends THREE.BufferGeometry {
 
     public async load(): Promise<void> {
         const response =
-            await fetch( "/data/coastline.json" );
+            await fetch("/data/coastline.json");
 
         const geoJson =
             await response.json() as FeatureCollection<
@@ -37,7 +37,9 @@ export class CoastlineGeometry extends THREE.BufferGeometry {
             MultiLineString
         >
     ): void {
+
         const positions: number[] = [];
+        const randoms: number[] = [];
 
         for (
             const feature
@@ -50,9 +52,11 @@ export class CoastlineGeometry extends THREE.BufferGeometry {
             switch (
                 geometry.type
             ) {
+
                 case "LineString":
                     this.pushLine(
                         positions,
+                        randoms,
                         geometry.coordinates
                     );
                     break;
@@ -65,11 +69,13 @@ export class CoastlineGeometry extends THREE.BufferGeometry {
 
                         this.pushLine(
                             positions,
+                            randoms,
                             line
                         );
 
                     }
                     break;
+
             }
 
         }
@@ -81,14 +87,25 @@ export class CoastlineGeometry extends THREE.BufferGeometry {
                 3
             )
         );
+
+        this.setAttribute(
+            "randomDirection",
+            new THREE.Float32BufferAttribute(
+                randoms,
+                3
+            )
+        );
+
     }
 
     private pushLine(
         positions: number[],
+        randoms: number[],
         coordinates: number[][]
     ): void {
 
-        for (const coordinate of coordinates) {
+        for ( const coordinate of coordinates ) {
+
             const point =
                 lonLatToVector3(
                     this.radius,
@@ -101,7 +118,26 @@ export class CoastlineGeometry extends THREE.BufferGeometry {
                 point.y,
                 point.z
             );
+
+            //----------------------------------
+            // Random direction
+            //----------------------------------
+
+            const direction =
+                new THREE.Vector3(
+                    Math.random() * 2 - 1,
+                    Math.random() * 2 - 1,
+                    Math.random() * 2 - 1
+                ).normalize();
+
+            randoms.push(
+                direction.x,
+                direction.y,
+                direction.z
+            );
+
         }
 
     }
+
 }

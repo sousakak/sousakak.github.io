@@ -21,7 +21,7 @@ export class CoastlineMaterial extends THREE.ShaderMaterial {
                 },
 
                 uRadius: {
-                    value: 0.25
+                    value: 0.3
                 },
 
                 uColor: {
