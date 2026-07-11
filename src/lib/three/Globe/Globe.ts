@@ -12,6 +12,8 @@ export class Globe {
 
     private readonly geometries: THREE.BufferGeometry[] = [];
 
+    private readonly mouse = new THREE.Vector3();
+
     public constructor() {
         this.object = new THREE.Group();
 
@@ -47,6 +49,15 @@ export class Globe {
     public update(
         time: Time
     ): void {
+
+        this.material.setTime(
+            time.elapsed
+        );
+
+        this.material.setMouse(
+            this.mouse
+        );
+
         this.object.rotation.y +=
             time.delta * 0.12;
 
@@ -57,6 +68,14 @@ export class Globe {
 
         this.object.rotation.z +=
             time.delta * 0.08;
+    }
+
+    public setMouse(
+        mouse: THREE.Vector3
+    ): void {
+        this.mouse.copy(
+            mouse
+        );
     }
 
     public dispose(): void {

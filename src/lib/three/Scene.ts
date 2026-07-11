@@ -16,6 +16,8 @@ export default class Scene {
 
     private readonly time: Time;
 
+    private readonly mouse = new THREE.Vector2();
+
     private animationFrameId: number | null = null;
 
     public constructor(
@@ -41,6 +43,11 @@ export default class Scene {
             new Time();
 
         window.addEventListener(
+            "pointermove",
+            this.handlePointerMove
+        );
+
+        window.addEventListener(
             "resize",
             this.handleResize
         );
@@ -60,6 +67,11 @@ export default class Scene {
         }
 
         window.removeEventListener(
+            "pointermove",
+            this.handlePointerMove
+        );
+
+        window.removeEventListener(
             "resize",
             this.handleResize
         );
@@ -70,6 +82,34 @@ export default class Scene {
 
         this.scene.clear();
     }
+
+    private readonly handlePointerMove =
+    (
+        event: PointerEvent
+    ): void => {
+
+        this.mouse.set(
+            event.clientX /
+            window.innerWidth * 2 - 1,
+            -( event.clientY / window.innerHeight ) * 2 + 1
+        );
+
+        const vector =
+            new THREE.Vector3(
+                this.mouse.x,
+                this.mouse.y,
+                0
+            );
+
+        vector.unproject(
+            this.cameraManager.camera
+        );
+
+        this.globe.setMouse(
+            vector
+        );
+
+    };
 
     private readonly handleResize =
         (): void => {

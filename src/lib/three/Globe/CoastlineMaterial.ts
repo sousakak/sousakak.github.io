@@ -41,7 +41,7 @@ export class CoastlineMaterial extends THREE.ShaderMaterial {
     public setMouse(
         mouse: THREE.Vector3
     ): void {
-        this.uniforms.uMouse.value
+        (this.uniforms.uMouse.value  as THREE.Vector3)
             .copy(mouse);
     }
 }
