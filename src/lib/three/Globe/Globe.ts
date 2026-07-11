@@ -34,7 +34,7 @@ export class Globe {
         );
 
         const line =
-            new THREE.LineSegments(
+            new THREE.Points(
                 geometry,
                 this.material
             );

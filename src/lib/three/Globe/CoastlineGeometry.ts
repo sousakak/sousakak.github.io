@@ -88,35 +88,18 @@ export class CoastlineGeometry extends THREE.BufferGeometry {
         coordinates: number[][]
     ): void {
 
-        for (
-            let i = 0;
-            i < coordinates.length - 1;
-            i++
-        ) {
-            const start =
+        for (const coordinate of coordinates) {
+            const point =
                 lonLatToVector3(
                     this.radius,
-                    coordinates[i][0],
-                    coordinates[i][1]
-                );
-
-            const end =
-                lonLatToVector3(
-                    this.radius,
-                    coordinates[i + 1][0],
-                    coordinates[i + 1][1]
+                    coordinate[0],
+                    coordinate[1]
                 );
 
             positions.push(
-                start.x,
-                start.y,
-                start.z
-            );
-
-            positions.push(
-                end.x,
-                end.y,
-                end.z
+                point.x,
+                point.y,
+                point.z
             );
         }
 

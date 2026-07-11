@@ -2,38 +2,6 @@ import * as THREE from "three";
 import vertexShader from "./coastline.vert";
 import fragmentShader from "./coastline.frag";
 
-/*
-const vertexShader = `uniform float uTime;
-uniform vec3 uMouse;
-
-varying vec3 vPosition;
-
-void main() {
-    vPosition = position;
-
-    vec3 transformed = position;
-
-    gl_Position =
-        projectionMatrix *
-        modelViewMatrix *
-        vec4(
-            transformed,
-            1.0
-        );
-}`
-const fragmentShader = `uniform vec3 uColor;
-uniform float uOpacity;
-
-varying vec3 vPosition;
-
-void main() {
-    gl_FragColor = vec4(
-        uColor,
-        uOpacity
-    );
-}`;
-*/
-
 export class CoastlineMaterial extends THREE.ShaderMaterial {
     public constructor() {
         super({

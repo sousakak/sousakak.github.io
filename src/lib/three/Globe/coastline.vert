@@ -15,4 +15,6 @@ void main() {
             transformed,
             1.0
         );
+
+    gl_PointSize = 1.5;
 }
