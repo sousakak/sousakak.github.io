@@ -1,5 +1,6 @@
 uniform float uTime;
 uniform vec3 uMouse;
+uniform float uRadius;
 
 varying vec3 vPosition;
 

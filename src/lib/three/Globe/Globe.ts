@@ -14,11 +14,29 @@ export class Globe {
 
     private readonly mouse = new THREE.Vector3();
 
+    private readonly hitSphere: THREE.Mesh;
+
     public constructor() {
         this.object = new THREE.Group();
 
         this.material =
             new CoastlineMaterial();
+
+        this.hitSphere =
+            new THREE.Mesh(
+                new THREE.SphereGeometry(
+                    this.radius,
+                    32,
+                    32
+                ),
+                new THREE.MeshBasicMaterial({
+                    visible: false
+                })
+            );
+
+        this.object.add(
+            this.hitSphere
+        );
 
         void this.load();
     }
@@ -46,6 +64,18 @@ export class Globe {
         );
     }
 
+    public get hitObject(): THREE.Object3D {
+        return this.hitSphere;
+    }
+
+    public setMouse(
+        mouse: THREE.Vector3
+    ): void {
+        this.object.worldToLocal(
+            this.mouse.copy(mouse)
+        );
+    }
+
     public update(
         time: Time
     ): void {
@@ -68,14 +98,6 @@ export class Globe {
 
         this.object.rotation.z +=
             time.delta * 0.08;
-    }
-
-    public setMouse(
-        mouse: THREE.Vector3
-    ): void {
-        this.mouse.copy(
-            mouse
-        );
     }
 
     public dispose(): void {

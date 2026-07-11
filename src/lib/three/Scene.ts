@@ -18,6 +18,8 @@ export default class Scene {
 
     private readonly mouse = new THREE.Vector2();
 
+    private readonly raycaster = new THREE.Raycaster();
+
     private animationFrameId: number | null = null;
 
     public constructor(
@@ -89,24 +91,36 @@ export default class Scene {
     ): void => {
 
         this.mouse.set(
+
             event.clientX /
             window.innerWidth * 2 - 1,
-            -( event.clientY / window.innerHeight ) * 2 + 1
+
+            -(
+                event.clientY /
+                window.innerHeight
+            ) * 2 + 1
+
         );
 
-        const vector =
-            new THREE.Vector3(
-                this.mouse.x,
-                this.mouse.y,
-                0
-            );
-
-        vector.unproject(
+        this.raycaster.setFromCamera(
+            this.mouse,
             this.cameraManager.camera
         );
 
+        const intersects =
+            this.raycaster.intersectObject(
+                this.globe.hitObject,
+                false
+            );
+
+        if (
+            intersects.length === 0
+        ) {
+            return;
+        }
+
         this.globe.setMouse(
-            vector
+            intersects[0].point
         );
 
     };
