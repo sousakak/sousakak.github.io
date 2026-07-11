@@ -53,14 +53,14 @@ export class Globe {
             geometry
         );
 
-        const line =
+        const points =
             new THREE.Points(
                 geometry,
                 this.material
             );
 
         this.object.add(
-            line
+            points
         );
     }
 

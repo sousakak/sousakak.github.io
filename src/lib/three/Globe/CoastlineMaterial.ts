@@ -20,6 +20,10 @@ export class CoastlineMaterial extends THREE.ShaderMaterial {
                     value: new THREE.Vector3()
                 },
 
+                uRadius: {
+                    value: 0.25
+                },
+
                 uColor: {
                     value: new THREE.Color(0xffffff)
                 },
@@ -41,7 +45,7 @@ export class CoastlineMaterial extends THREE.ShaderMaterial {
     public setMouse(
         mouse: THREE.Vector3
     ): void {
-        (this.uniforms.uMouse.value  as THREE.Vector3)
+        (this.uniforms.uMouse.value as THREE.Vector3)
             .copy(mouse);
     }
 }
