@@ -56,7 +56,7 @@
         position: fixed;
         top: 20px;
         right: 20px;
-        z-index: 10;
+        z-index: map.get($z-index, "overlay");
 
         display: flex;
         gap: 24px;
@@ -66,10 +66,12 @@
     .menu-item {
         color: map.get($colors, "text");
         text-decoration: none;
-        font-size: 14px;
-        letter-spacing: 0.05em;
+        font-size: map.get($typography, "size", "sm");
+        letter-spacing: map.get($typography, "letter-spacing", "wide");
 
-        transition: color 0.2s ease, transform 0.2s ease;
+        transition:
+            color map.get($motion, "duration", "fast") map.get($motion, "easing", "ease"),
+            transform map.get($motion, "duration", "fast") map.get($motion, "easing", "ease");
 
         &::after {
             content: "";
@@ -77,7 +79,7 @@
             height: 1px;
             background: map.get($colors, "accent");
             transform: scaleX(0);
-            transition: transform 0.2s ease;
+            transition: transform map.get($motion, "duration", "fast") map.get($motion, "easing", "ease");
         }
 
         &:hover {

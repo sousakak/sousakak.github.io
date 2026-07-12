@@ -22,6 +22,33 @@ $scale: (
     )
 );
 
+$typography: (
+    "size": (
+        "sm": 14px,
+        "md": 16px,
+        "lg": 24px,
+        "xl": 48px
+    ),
+    "letter-spacing": (
+        "wide": 0.05em
+    )
+);
+
+$motion: (
+    "duration": (
+        "fast": 0.2s,
+        "base": 0.3s
+    ),
+    "easing": (
+        "ease": ease,
+        "swing": cubic-bezier(0.65, 0, 0.35, 1)
+    )
+);
+
+$z-index: (
+    "overlay": 10
+);
+
 :root {
     @each $key, $value in $colors {
         --color-#{$key}: #{$value};
@@ -31,5 +58,21 @@ $scale: (
         @each $key, $value in $map {
             --#{$group}-#{$key}: #{$value};
         }
+    }
+
+    @each $group, $map in $typography {
+        @each $key, $value in $map {
+            --font-#{$group}-#{$key}: #{$value};
+        }
+    }
+
+    @each $group, $map in $motion {
+        @each $key, $value in $map {
+            --motion-#{$group}-#{$key}: #{$value};
+        }
+    }
+
+    @each $key, $value in $z-index {
+        --z-index-#{$key}: #{$value};
     }
 }
