@@ -1,7 +1,8 @@
 ---
 import AppBackgroundCanvas from "../components/AppBackgroundCanvas.vue";
-import AppCursor from "../components/AppCursor.vue";
 import AppMenu from "../components/AppMenu.vue";
+import AppSectionIndicator from "../components/AppSectionIndicator.vue";
+import AppCursor from "../components/AppCursor.vue";
 
 import "../styles/global.scss";
 
@@ -13,7 +14,8 @@ const t = getTranslator( locale );
 const menuItems = [
     { label: t("menu-home"), href: "/" },
     { label: t("menu-about"), href: "/about" },
-    { label: t("menu-projects"), href: "/projects" }
+    { label: t("menu-projects"), href: "/projects" },
+    { label: t("menu-resources"), href: "/resources" }
 ];
 ---
 
@@ -43,7 +45,7 @@ const menuItems = [
         <AppBackgroundCanvas client:load />
         <AppMenu client:load items={menuItems} />
 		<slot />
-
+        <AppSectionIndicator client:load />
         <AppCursor client:load />
 	</body>
 </html>
