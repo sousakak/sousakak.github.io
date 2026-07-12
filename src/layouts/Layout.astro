@@ -5,15 +5,20 @@ import AppMenu from "../components/AppMenu.vue";
 
 import "../styles/global.scss";
 
+import { getTranslator } from "../i18n";
+
+const locale = Astro.currentLocale ?? "en";
+const t = getTranslator( locale );
+
 const menuItems = [
-    { label: "home", href: "/" },
-    { label: "about", href: "/about" },
-    { label: "projects", href: "/projects" }
+    { label: t("menu-home"), href: "/" },
+    { label: t("menu-about"), href: "/about" },
+    { label: t("menu-projects"), href: "/projects" }
 ];
 ---
 
 <!doctype html>
-<html lang="ja">
+<html>
 	<head>
 		<meta charset="UTF-8" />
         <meta http-equiv="content-language" content="ja">
