@@ -1,13 +1,36 @@
 <script setup lang="ts">
-    import { ref, onMounted, onBeforeUnmount } from "vue";
+    import { ref, computed, onMounted, onBeforeUnmount } from "vue";
 
     interface SectionChangeDetail {
         index: number;
         total: number;
     }
 
+    const maxSlots = 10;
+
     const currentIndex = ref( 0 );
     const total = ref( 0 );
+
+    type SlotState = "ghost" | "inactive" | "active";
+
+    const slots = computed<SlotState[]>( () => {
+
+        return Array.from(
+            { length: maxSlots },
+            ( _, index ) => {
+
+                if ( index >= total.value ) {
+                    return "ghost";
+                }
+
+                return index === currentIndex.value
+                    ? "active"
+                    : "inactive";
+
+            }
+        );
+
+    } );
 
     const handleSectionChange = ( event: Event ): void => {
         const detail = ( event as CustomEvent<SectionChangeDetail> ).detail;
@@ -36,10 +59,10 @@
         class="indicator"
     >
         <span
-            v-for="index in total"
+            v-for="( state, index ) in slots"
             :key="index"
             class="indicator-line"
-            :class="{ 'is-active': index - 1 === currentIndex }"
+            :class="`is-${ state }`"
         />
     </div>
 </template>
@@ -53,20 +76,32 @@
 
         display: flex;
         flex-direction: column;
-        gap: 12px;
+        gap: 10px;
         transform: translateY(-50%);
     }
 
     .indicator-line {
-        width: 20px;
-        height: 2px;
+        display: block;
         background: #ffffff;
-        opacity: 0.25;
+        border-radius: 1px;
 
-        transition: opacity 0.3s ease, width 0.3s ease;
+        transition: opacity 0.3s ease, width 0.3s ease, height 0.3s ease;
+
+        &.is-ghost {
+            width: 8px;
+            height: 1px;
+            opacity: 0.27;
+        }
+
+        &.is-inactive {
+            width: 20px;
+            height: 2px;
+            opacity: 0.45;
+        }
 
         &.is-active {
-            width: 30px;
+            width: 32px;
+            height: 2px;
             opacity: 1;
         }
     }
