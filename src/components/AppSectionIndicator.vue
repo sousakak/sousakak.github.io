@@ -68,11 +68,14 @@
 </template>
 
 <style scoped lang="scss">
+    @use "sass:map";
+    @use "../styles/variables" as *;
+
     .indicator {
         position: fixed;
         top: 50%;
         right: 24px;
-        z-index: 10;
+        z-index: map.get($z-index, "overlay");
 
         display: flex;
         flex-direction: column;
@@ -82,10 +85,13 @@
 
     .indicator-line {
         display: block;
-        background: #ffffff;
+        background: map.get($colors, "text");
         border-radius: 1px;
 
-        transition: opacity 0.3s ease, width 0.3s ease, height 0.3s ease;
+        transition:
+            opacity map.get($motion, "duration", "base") map.get($motion, "easing", "ease"),
+            width map.get($motion, "duration", "base") map.get($motion, "easing", "ease"),
+            height map.get($motion, "duration", "base") map.get($motion, "easing", "ease");
 
         &.is-ghost {
             width: 8px;

@@ -122,6 +122,9 @@
 </template>
 
 <style scoped lang="scss">
+    @use "sass:map";
+    @use "../styles/variables" as *;
+
     .sections {
         position: relative;
         width: 100%;
@@ -134,7 +137,7 @@
         flex-direction: column;
 
         transition-property: transform;
-        transition-timing-function: cubic-bezier(0.65, 0, 0.35, 1);
+        transition-timing-function: map.get($motion, "easing", "swing");
 
         :deep(astro-slot) {
             display: contents;

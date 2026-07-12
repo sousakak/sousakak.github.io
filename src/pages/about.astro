@@ -1,6 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import AppScrollableSections from "../components/AppScrollableSections.vue";
+
+import "../styles/about.scss";
 ---
 
 <Layout>
@@ -10,18 +12,3 @@ import AppScrollableSections from "../components/AppScrollableSections.vue";
         <section class="panel">3番目のコンテンツ</section>
     </AppScrollableSections>
 </Layout>
-
-<style>
-    .panel {
-        width: 100%;
-        height: 100vh;
-        flex-shrink: 0;
-
-        display: flex;
-        align-items: center;
-        justify-content: center;
-
-        color: #ffffff;
-        font-size: 24px;
-    }
-</style>
