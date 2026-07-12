@@ -15,6 +15,7 @@ export class CoastlineMaterial
 
             transparent: true,
             depthWrite: false,
+            blending: THREE.AdditiveBlending, // 追加
 
             uniforms: {
                 uTime: {
@@ -29,8 +30,20 @@ export class CoastlineMaterial
                 uRadius: {
                     value: 0.30
                 },
+                uScatter: {
+                    value: 0.05
+                },
+                uPointSize: {
+                    value: 0.02
+                },
                 uColor: {
                     value: new THREE.Color(0xffffff)
+                },
+                uGlowColor: {
+                    value: new THREE.Color(0xa855f7)
+                },
+                uGlowIntensity: {
+                    value: 2.5
                 },
                 uOpacity: {
                     value: 0.9
