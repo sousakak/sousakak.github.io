@@ -55,13 +55,16 @@ The project focuses on creating a modern interactive experience while keeping th
 │   ├── lib/
 │   │   ├── three/
 │   │   │   ├── Camera.ts
+│   │   │   ├── Interaction.ts
 │   │   │   ├── Renderer.ts
 │   │   │   ├── Scene.ts
 │   │   │   ├── Time.ts
 │   │   │   └── Globe/
 │   │   │       ├── Globe.ts
 │   │   │       ├── CoastlineGeometry.ts
-│   │   │       └── CoastlineMaterial.ts
+│   │   │       ├── CoastlineMaterial.ts
+│   │   │       ├── coastline.frag
+│   │   │       └── coastline.vert
 │   │   │
 │   │   └── utils/
 │   │       └── convertCoords.ts

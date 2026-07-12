@@ -8,6 +8,8 @@ uniform float uRadius;
 uniform float uScatter;
 uniform float uPointSize;
 
+varying float vInfluence;
+
 void main() {
 
     //----------------------------------
@@ -24,6 +26,8 @@ void main() {
         0.0,
         dist
     );
+
+    vInfluence = influence;
 
     //----------------------------------
     // Tangent direction
@@ -49,54 +53,30 @@ void main() {
     if (
         velocityLength > 0.00001
     ) {
-        velocityDirection =
-            uVelocity /
-            velocityLength;
+        velocityDirection = uVelocity / velocityLength;
     }
 
     //----------------------------------
     // Random jitter
     //----------------------------------
 
-    vec3 randomDirection =
-        normalize(
-            random
-        );
+    vec3 randomDirection = normalize( random );
 
     //----------------------------------
     // Final offset
     //----------------------------------
 
     vec3 offset =
-        tangentDirection
-            * influence
-            * uScatter
+        tangentDirection * influence * uScatter
+        + velocityDirection * influence * 0.03
+        + randomDirection * influence * 0.02;
 
-        + velocityDirection
-            * influence
-            * 0.03
+    vec3 transformed = position + offset;
 
-        + randomDirection
-            * influence
-            * 0.02;
+    gl_Position = projectionMatrix
+        * modelViewMatrix
+        * vec4( transformed, 1.0 );
 
-    //----------------------------------
-    // Position
-    //----------------------------------
-
-    vec3 transformed =
-        position +
-        offset;
-
-    gl_Position =
-        projectionMatrix *
-        modelViewMatrix *
-        vec4(
-            transformed,
-            1.0
-        );
-
-    gl_PointSize =
-        uPointSize;
+    gl_PointSize = uPointSize;
 
 }
