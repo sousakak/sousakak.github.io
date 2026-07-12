@@ -4,10 +4,21 @@ import AppCursor from "../components/AppCursor.vue";
 import AppMenu from "../components/AppMenu.vue";
 
 import "../styles/global.scss";
+
+import { getTranslator } from "../i18n";
+
+const locale = Astro.currentLocale ?? "en";
+const t = getTranslator( locale );
+
+const menuItems = [
+    { label: t("menu-home"), href: "/" },
+    { label: t("menu-about"), href: "/about" },
+    { label: t("menu-projects"), href: "/projects" }
+];
 ---
 
 <!doctype html>
-<html lang="ja">
+<html>
 	<head>
 		<meta charset="UTF-8" />
         <meta http-equiv="content-language" content="ja">
@@ -30,7 +41,7 @@ import "../styles/global.scss";
 	</head>
 	<body>
         <AppBackgroundCanvas client:load />
-        <AppMenu client:load />
+        <AppMenu client:load items={menuItems} />
 		<slot />
 
         <AppCursor client:load />

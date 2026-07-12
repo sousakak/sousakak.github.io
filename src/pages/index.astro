@@ -1,6 +1,12 @@
 ---
 import Layout from "../layouts/Layout.astro";
+
 import "../styles/index.scss";
+
+import { getTranslator } from "../i18n";
+
+const locale = Astro.currentLocale ?? "en";
+const t = getTranslator( locale );
 ---
 
 <Layout>
@@ -9,10 +15,10 @@ import "../styles/index.scss";
             <div
                 style="width: 100%; text-align: center;"
             >
-                <h1>Welcome to emptyCan's homepage.</h1>
+                <h1>{ t("index-welcome") }</h1>
                 <p>
                     <br />
-                    You can find many stuff here including convenient tools, resources, and games.
+                    { t("index-description") }
                 </p>
             </div>
         </main>
