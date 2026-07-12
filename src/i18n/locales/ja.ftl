@@ -5,6 +5,7 @@
 menu-home = Home
 menu-about = About
 menu-projects = Projects
+menu-resources = Resources
 
 # Index content
 index-welcome = { -owner-name }のホームページへようこそ。

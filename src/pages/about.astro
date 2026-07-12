@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+import AppScrollableSections from "../components/AppScrollableSections.vue";
+---
+
+<Layout>
+    <AppScrollableSections client:load>
+        <section class="panel">最初のコンテンツ</section>
+        <section class="panel">2番目のコンテンツ</section>
+        <section class="panel">3番目のコンテンツ</section>
+    </AppScrollableSections>
+</Layout>
+
+<style>
+    .panel {
+        width: 100%;
+        height: 100vh;
+        flex-shrink: 0;
+
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        color: #ffffff;
+        font-size: 24px;
+    }
+</style>
