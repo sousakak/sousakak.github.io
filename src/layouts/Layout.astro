@@ -4,6 +4,12 @@ import AppCursor from "../components/AppCursor.vue";
 import AppMenu from "../components/AppMenu.vue";
 
 import "../styles/global.scss";
+
+const menuItems = [
+    { label: "home", href: "/" },
+    { label: "about", href: "/about" },
+    { label: "projects", href: "/projects" }
+];
 ---
 
 <!doctype html>
@@ -30,7 +36,7 @@ import "../styles/global.scss";
 	</head>
 	<body>
         <AppBackgroundCanvas client:load />
-        <AppMenu client:load />
+        <AppMenu client:load items={menuItems} />
 		<slot />
 
         <AppCursor client:load />
