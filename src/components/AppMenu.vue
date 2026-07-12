@@ -1,4 +1,13 @@
 <script setup lang="ts">
+    interface MenuItem {
+        label: string;
+        href: string;
+    }
+
+    defineProps<{
+        items: MenuItem[];
+    }>();
+
     const emitHover = (state: boolean): void => {
         window.dispatchEvent(
             new CustomEvent("menu-hover", {
@@ -23,7 +32,9 @@
 <template>
     <nav class="menu">
         <a
-            href="#"
+            v-for="item in items"
+            :key="item.href"
+            :href="item.href"
             class="menu-item"
             @mouseenter="emitHover(true)"
             @mouseleave="emitHover(false)"
@@ -32,33 +43,7 @@
             @pointerleave="emitPressEnd"
             @pointercancel="emitPressEnd"
         >
-            home
-        </a>
-
-        <a
-            href="/about"
-            class="menu-item"
-            @mouseenter="emitHover(true)"
-            @mouseleave="emitHover(false)"
-            @pointerdown="emitPressStart"
-            @pointerup="emitPressEnd"
-            @pointerleave="emitPressEnd"
-            @pointercancel="emitPressEnd"
-        >
-            about
-        </a>
-
-        <a
-            href="/projects"
-            class="menu-item"
-            @mouseenter="emitHover(true)"
-            @mouseleave="emitHover(false)"
-            @pointerdown="emitPressStart"
-            @pointerup="emitPressEnd"
-            @pointerleave="emitPressEnd"
-            @pointercancel="emitPressEnd"
-        >
-            projects
+            {{ item.label }}
         </a>
     </nav>
 </template>
