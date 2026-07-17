@@ -2,28 +2,70 @@
     import { ref, onMounted, onBeforeUnmount } from "vue";
 
     import { onReady } from "../lib/three/ReadyState";
+    import { ErosionRenderer } from "../lib/transition/ErosionRenderer";
+    import { animateValue, easeInOutCubic } from "../lib/utils/tween";
 
-    const isReady = ref( false );
+    const canvasRef = ref<HTMLCanvasElement | null>( null );
     const isRemoved = ref( false );
 
-    let unsubscribe: ( () => void ) | null = null;
+    let renderer: ErosionRenderer | null = null;
+    let currentProgress = 1;
 
-    const handleReady = (): void => {
+    let unsubscribeReady: ( () => void ) | null = null;
+    let cancelAnimation: ( () => void ) | null = null;
 
-        isReady.value = true;
+    const setProgress = ( progress: number ): void => {
+        currentProgress = progress;
+        renderer?.setProgress( progress );
+    };
+
+    const handleResize = (): void => {
+        renderer?.resize();
+        renderer?.setProgress( currentProgress );
+    };
+
+    const reveal = (): void => {
+
+        cancelAnimation?.();
+
+        cancelAnimation = animateValue(
+            1,
+            0,
+            1400,
+            setProgress,
+            easeInOutCubic
+        );
 
         window.setTimeout( () => {
             isRemoved.value = true;
-        }, 1200 );
+        }, 1500 );
 
     };
 
     onMounted( () => {
-        unsubscribe = onReady( handleReady );
+
+        if ( !canvasRef.value ) {
+            return;
+        }
+
+        renderer = new ErosionRenderer(
+            canvasRef.value,
+            Math.random() * 1000
+        );
+
+        setProgress( 1 );
+
+        window.addEventListener( "resize", handleResize );
+
+        unsubscribeReady = onReady( reveal );
+
     } );
 
     onBeforeUnmount( () => {
-        unsubscribe?.();
+        unsubscribeReady?.();
+        cancelAnimation?.();
+        window.removeEventListener( "resize", handleResize );
+        renderer?.dispose();
     } );
 </script>
 
@@ -31,22 +73,30 @@
     <div
         v-if="!isRemoved"
         class="loading-screen"
-        :class="{ 'is-ready': isReady }"
     >
+        <canvas
+            ref="canvasRef"
+            class="erosion-canvas"
+        />
+
+        <!-- Contents displayed during the loading screen visible -->
     </div>
 </template>
 
 <style scoped lang="scss">
-    @use "sass:map";
-    @use "../styles/variables" as *;
-
     .loading-screen {
         position: fixed;
         inset: 0;
         z-index: 100;
 
-        background: map.get($colors, "bg");
-
         pointer-events: none;
+    }
+
+    .erosion-canvas {
+        position: absolute;
+        inset: 0;
+
+        width: 100%;
+        height: 100%;
     }
 </style>
