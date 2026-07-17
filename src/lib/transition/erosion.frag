@@ -51,13 +51,13 @@ void main() {
     float edgeWidth = 0.05;
 
     //----------------------------------
-    // n < uProgress の領域を「侵食済み」として塗る
+    // Color the area which is n < uProgress as "already filled"
     //----------------------------------
 
     float covered = 1.0 - smoothstep( uProgress - edgeWidth, uProgress + edgeWidth, n );
 
     //----------------------------------
-    // しきい値付近だけを光らせる（侵食の縁）
+    // Highlight only the area near the threshold (the edge of erosion)
     //----------------------------------
 
     float rim = smoothstep( uProgress - edgeWidth, uProgress, n )

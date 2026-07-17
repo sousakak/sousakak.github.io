@@ -1,18 +1,22 @@
 <script setup lang="ts">
     import { ref, onMounted, onBeforeUnmount } from "vue";
+    import type { TransitionBeforePreparationEvent } from "astro:transitions/client";
 
     import { onReady } from "../lib/three/ReadyState";
     import { ErosionRenderer } from "../lib/transition/ErosionRenderer";
     import { animateValue, easeInOutCubic } from "../lib/utils/tween";
 
     const canvasRef = ref<HTMLCanvasElement | null>( null );
-    const isRemoved = ref( false );
+    const isHydrated = ref( false );
 
     let renderer: ErosionRenderer | null = null;
     let currentProgress = 1;
 
     let unsubscribeReady: ( () => void ) | null = null;
     let cancelAnimation: ( () => void ) | null = null;
+
+    const REVEAL_DURATION = 1400;
+    const COVER_DURATION = 900;
 
     const setProgress = ( progress: number ): void => {
         currentProgress = progress;
@@ -24,21 +28,71 @@
         renderer?.setProgress( currentProgress );
     };
 
+    //----------------------------------
+    // Transition from loading screen to page content (progress: 1 → 0)
+    //----------------------------------
+
     const reveal = (): void => {
 
         cancelAnimation?.();
 
         cancelAnimation = animateValue(
-            1,
+            currentProgress,
             0,
-            1400,
+            REVEAL_DURATION,
             setProgress,
             easeInOutCubic
         );
 
-        window.setTimeout( () => {
-            isRemoved.value = true;
-        }, 1500 );
+    };
+
+    //----------------------------------
+    // Transition from page content to loading screen (progress: 0 → 1)
+    //----------------------------------
+
+    const cover = (): Promise<void> => {
+
+        return new Promise( ( resolve ) => {
+
+            cancelAnimation?.();
+
+            cancelAnimation = animateValue(
+                currentProgress,
+                1,
+                COVER_DURATION,
+                setProgress,
+                easeInOutCubic
+            );
+
+            window.setTimeout( resolve, COVER_DURATION );
+
+        } );
+
+    };
+
+    //----------------------------------
+    // Detect the click on link to start navigation
+    //----------------------------------
+
+    const handleBeforePreparation = (
+        event: TransitionBeforePreparationEvent
+    ): void => {
+
+        const originalLoader = event.loader;
+
+        event.loader = async () => {
+
+            //----------------------------------
+            // Run the fade-in animation in parallel with the actual page load
+            // (Wait for the swap until whichever one takes longer is finished)
+            //----------------------------------
+
+            await Promise.all([
+                cover(),
+                originalLoader()
+            ]);
+
+        };
 
     };
 
@@ -55,41 +109,59 @@
 
         setProgress( 1 );
 
+        isHydrated.value = true;
+
         window.addEventListener( "resize", handleResize );
+
+        document.addEventListener(
+            "astro:before-preparation",
+            handleBeforePreparation
+        );
 
         unsubscribeReady = onReady( reveal );
 
-    } );
+    });
 
     onBeforeUnmount( () => {
         unsubscribeReady?.();
         cancelAnimation?.();
         window.removeEventListener( "resize", handleResize );
+        document.removeEventListener(
+            "astro:before-preparation",
+            handleBeforePreparation
+        );
         renderer?.dispose();
     } );
 </script>
 
 <template>
     <div
-        v-if="!isRemoved"
         class="loading-screen"
+        :class="{ 'is-hydrated': isHydrated }"
     >
         <canvas
             ref="canvasRef"
             class="erosion-canvas"
         />
-
-        <!-- Contents displayed during the loading screen visible -->
     </div>
 </template>
 
 <style scoped lang="scss">
+    @use "sass:map";
+    @use "../styles/variables" as *;
+
     .loading-screen {
         position: fixed;
         inset: 0;
         z-index: 100;
 
+        background: map.get($colors, "bg");
+
         pointer-events: none;
+
+        &.is-hydrated {
+            background: transparent;
+        }
     }
 
     .erosion-canvas {
