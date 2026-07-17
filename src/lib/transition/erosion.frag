@@ -49,6 +49,7 @@ void main() {
     float n = fbm( p );
 
     float edgeWidth = 0.05;
+    float haloWidth = 0.16;
 
     //----------------------------------
     // Color the area which is n < uProgress as "already filled"
@@ -57,14 +58,25 @@ void main() {
     float covered = 1.0 - smoothstep( uProgress - edgeWidth, uProgress + edgeWidth, n );
 
     //----------------------------------
-    // Highlight only the area near the threshold (the edge of erosion)
+    // Rim core (concentrated and strong)
     //----------------------------------
 
-    float rim = smoothstep( uProgress - edgeWidth, uProgress, n )
+    float rimCore = smoothstep( uProgress - edgeWidth, uProgress, n )
         - smoothstep( uProgress, uProgress + edgeWidth, n );
 
-    vec3 color = uColor + uGlowColor * rim * 1.5;
+    //----------------------------------
+    // Blur of rim (spread and soft)
+    //----------------------------------
 
-    gl_FragColor = vec4( color, covered );
+    float rimHalo = smoothstep( uProgress - haloWidth, uProgress, n )
+        - smoothstep( uProgress, uProgress + haloWidth, n );
+
+    float glow = rimCore * 1.1 + rimHalo * 0.9;
+
+    vec3 color = uColor + uGlowColor * glow;
+
+    float alpha = clamp( covered + rimCore * 0.9 + rimHalo * 0.35, 0.0, 1.0 );
+
+    gl_FragColor = vec4( color, alpha );
 
 }
