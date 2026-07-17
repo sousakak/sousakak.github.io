@@ -6,8 +6,17 @@ uniform float uSeed;
 uniform vec3 uColor;
 uniform vec3 uGlowColor;
 
-float hash( vec2 p ) {
-    return fract( sin( dot( p, vec2( 127.1, 311.7 ) ) + uSeed ) * 43758.5453123 );
+vec2 hash( vec2 p ) {
+
+    p = vec2(
+        dot( p, vec2(127.1,311.7) ),
+        dot( p, vec2(269.5,183.3) )
+    );
+
+    return normalize(
+        fract( sin( p + uSeed ) * 43758.5453123 ) * 2.0 - 1.0
+    );
+
 }
 
 float noise( vec2 p ) {
@@ -15,14 +24,18 @@ float noise( vec2 p ) {
     vec2 i = floor( p );
     vec2 f = fract( p );
 
-    float a = hash( i );
-    float b = hash( i + vec2( 1.0, 0.0 ) );
-    float c = hash( i + vec2( 0.0, 1.0 ) );
-    float d = hash( i + vec2( 1.0, 1.0 ) );
-
     vec2 u = f * f * ( 3.0 - 2.0 * f );
 
-    return mix( a, b, u.x ) + ( c - a ) * u.y * ( 1.0 - u.x ) + ( d - b ) * u.x * u.y;
+    float a = dot(hash( i ),f);
+    float b = dot(hash( i + vec2(1.0,0.0) ),f - vec2(1.0,0.0));
+    float c = dot(hash( i + vec2(0.0,1.0) ),f - vec2(0.0,1.0));
+    float d = dot(hash( i + vec2(1.0,1.0) ),f - vec2(1.0,1.0));
+
+    return mix(
+        mix( a, b, u.x ),
+        mix( c, d, u.x ),
+        u.y
+    ) * 0.5 + 0.5;
 
 }
 
@@ -44,7 +57,7 @@ float fbm( vec2 p ) {
 void main() {
 
     vec2 uv = gl_FragCoord.xy / uResolution;
-    vec2 p = uv * vec2( uResolution.x / uResolution.y, 1.0 ) * 6.0;
+    vec2 p = uv * vec2( uResolution.x / uResolution.y, 1.0 ) * 10.0;
 
     float n = fbm( p );
 
