@@ -5,7 +5,7 @@ body {
     margin: 0;
     background: map.get($colors, "bg");
     color: map.get($colors, "text");
-    font-family: system-ui;
+    font-family: map.get($typography, "font", "sans-serif-en"), system-ui;
     overflow: hidden;
 }
 

@@ -1,5 +1,20 @@
 @use "sass:map";
 
+@font-face {
+    font-family: "Ysabeau";
+    src: url('/fonts/Ysabeau-VariableFont_wght.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+@font-face {
+    font-family: "KazukiReiwa";
+    src: url('/fonts/KazukiReiwa - Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+    font-display: swap;
+}
+
 $colors: (
     "bg": #05060a,
     "text": #ffffff,
@@ -23,6 +38,10 @@ $scale: (
 );
 
 $typography: (
+    "font": (
+        "sans-serif-en": "Ysabeau",
+        "serif-ja": "KazukiReiwa"
+    ),
     "size": (
         "sm": 14px,
         "md": 16px,
@@ -46,7 +65,8 @@ $motion: (
 );
 
 $z-index: (
-    "overlay": 10
+    "overlay": 10,
+    "loading": 11
 );
 
 :root {

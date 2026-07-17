@@ -1,5 +1,8 @@
 ---
+import { ClientRouter } from "astro:transitions";
+
 import AppBackgroundCanvas from "../components/AppBackgroundCanvas.vue";
+import AppLoadingScreen from "../components/AppLoadingScreen.vue";
 import AppMenu from "../components/AppMenu.vue";
 import AppSectionIndicator from "../components/AppSectionIndicator.vue";
 import AppCursor from "../components/AppCursor.vue";
@@ -21,7 +24,7 @@ const menuItems = [
 ---
 
 <!doctype html>
-<html>
+<html lang="ja">
 	<head>
 		<meta charset="UTF-8" />
         <meta http-equiv="content-language" content="ja">
@@ -41,10 +44,19 @@ const menuItems = [
         <meta property="og:site_name" content="Personal website by emptyCan">
         <meta property="og:locale" content="ja_JP">
         <meta name="format-detection" content="email=no,telephone=no,address=no">
+        <ClientRouter />
 	</head>
 	<body>
-        <AppBackgroundCanvas client:load />
-        <AppMenu client:load items={menuItems} />
+        <AppBackgroundCanvas
+            client:load
+            transition:persist="globe"
+        />
+        <AppLoadingScreen client:load />
+        <AppMenu
+            client:load
+            items={menuItems}
+            transition:persist="menu"
+        />
 		<slot />
         <AppSectionIndicator client:load />
         <AppCursor client:load />
