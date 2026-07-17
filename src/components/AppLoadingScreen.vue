@@ -153,7 +153,7 @@
     .loading-screen {
         position: fixed;
         inset: 0;
-        z-index: 100;
+        z-index: map.get($z-index, "loading");
 
         background: map.get($colors, "bg");
 

@@ -9,7 +9,6 @@
 :where(*) {
     margin: 0px;
     padding: 0px;
-    font-family: "Klee One";
 }
 
 :where(*), :where(*::before), :where(*::after) {
