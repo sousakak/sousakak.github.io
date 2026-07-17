@@ -48,6 +48,8 @@
 
         border-radius: map.get($scale, "radius", "lg");
         margin-right: map.get($scale, "space", "xl"); // Prevent overlap with Indicator
+
+        overflow: hidden;
     }
 
     .card::before {
@@ -110,6 +112,8 @@
     .card-body {
         flex: 1;
         overflow-y: auto;
+
+        white-space: pre-line;
 
         font-size: map.get($typography, "size", "md");
         line-height: 1.8;
