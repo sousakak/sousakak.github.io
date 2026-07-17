@@ -1,14 +1,22 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import AppScrollableSections from "../components/AppScrollableSections.vue";
-
-import "../styles/about.scss";
+import TitlePanel from "../components/AppTitlePanel.vue";
+import ContentPanel from "../components/AppContentPanel.vue";
 ---
 
 <Layout>
     <AppScrollableSections client:load>
-        <section class="panel">最初のコンテンツ</section>
-        <section class="panel">2番目のコンテンツ</section>
-        <section class="panel">3番目のコンテンツ</section>
+        <TitlePanel title="About" >
+            <p>About me and this site.</p>
+        </TitlePanel>
+
+        <ContentPanel title="About Me">
+            <p>Profile comes here.</p>
+        </ContentPanel>
+
+        <ContentPanel title="About This Site">
+            <p>Description about this site comes here.</p>
+        </ContentPanel>
     </AppScrollableSections>
 </Layout>
