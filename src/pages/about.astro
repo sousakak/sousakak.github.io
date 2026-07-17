@@ -1,0 +1,27 @@
+---
+import Layout from "../layouts/Layout.astro";
+import AppScrollableSections from "../components/AppScrollableSections.vue";
+import TitlePanel from "../components/AppTitlePanel.vue";
+import ContentPanel from "../components/AppContentPanel.vue";
+
+import { getTranslator } from "../i18n";
+
+const locale = Astro.currentLocale ?? "en";
+const t = getTranslator( locale );
+---
+
+<Layout>
+    <AppScrollableSections client:load>
+        <TitlePanel title={t('about-title')} >
+            <p>{t('about-subtitle')}</p>
+        </TitlePanel>
+
+        <ContentPanel title={t('about-me-title')}>
+            <p>{t('about-me-content')}</p>
+        </ContentPanel>
+
+        <ContentPanel title={t('about-site-title')}>
+            <p>{t('about-site-content')}</p>
+        </ContentPanel>
+    </AppScrollableSections>
+</Layout>
