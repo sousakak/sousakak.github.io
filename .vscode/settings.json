@@ -5,8 +5,10 @@
         "Kazuki",
         "Reiwa",
         "smoothstep",
+        "snoise",
         "sousakak",
-        "wght"
+        "wght",
+        "xxzz"
     ],
     "webgl-glsl-editor.diagnostics": false
 }
