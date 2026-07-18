@@ -46,8 +46,21 @@ The project focuses on creating a modern interactive experience while keeping th
 ├── src/
 │   ├── components/
 │   │   ├── AppBackgroundCanvas.vue
+│   │   ├── AppContentPanel.vue
 │   │   ├── AppCursor.vue
-│   │   └── AppMenu.vue
+│   │   ├── AppLoadingScreen.vue
+│   │   ├── AppMenu.vue
+│   │   ├── AppScrollableSections.vue
+│   │   ├── AppSectionIndicator.vue
+│   │   └── AppTitlePanel.vue
+│   │
+│   ├── i18n/
+│   │   ├── locales/
+│   │   │   ├── en-perm.ftl
+│   │   │   ├── en.ftl
+│   │   │   └── ja.ftl
+│   │   │
+│   │   └── index.ts
 │   │
 │   ├── layouts/
 │   │   └── Layout.astro
@@ -56,6 +69,7 @@ The project focuses on creating a modern interactive experience while keeping th
 │   │   ├── three/
 │   │   │   ├── Camera.ts
 │   │   │   ├── Interaction.ts
+│   │   │   ├── ReadyState.ts
 │   │   │   ├── Renderer.ts
 │   │   │   ├── Scene.ts
 │   │   │   ├── Time.ts
@@ -66,13 +80,22 @@ The project focuses on creating a modern interactive experience while keeping th
 │   │   │       ├── coastline.frag
 │   │   │       └── coastline.vert
 │   │   │
+│   │   ├── transition/
+│   │   │   ├── ErosionRenderer.ts
+│   │   │   ├── erosion.frag
+│   │   │   └── erosion.vert
+│   │   │
 │   │   └── utils/
-│   │       └── convertCoords.ts
+│   │   │   ├── convertCoords.ts
+│   │       └── tween.ts
 │   │
 │   ├── pages/
+│   │   ├── 404.astro
+│   │   ├── about.astro
 │   │   └── index.astro
 │   │
 │   └── styles/
+│       ├── about.scss
 │       ├── global.scss
 │       ├── index.scss
 │       ├── reset.css

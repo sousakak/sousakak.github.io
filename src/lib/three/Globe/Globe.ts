@@ -1,5 +1,6 @@
 import * as THREE from "three";
 
+import { markReady } from "../ReadyState";
 import { Time } from "../Time";
 import { CoastlineGeometry } from "./CoastlineGeometry";
 import { CoastlineMaterial } from "./CoastlineMaterial";
@@ -64,6 +65,8 @@ export class Globe {
         );
 
         this.points.geometry = geometry;
+
+        markReady();
 
     }
 
