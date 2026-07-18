@@ -51,7 +51,10 @@ const menuItems = [
             client:load
             transition:persist="globe"
         />
-        <AppLoadingScreen client:load />
+        <AppLoadingScreen
+            client:load
+            transition:persist="loading"
+        />
         <AppMenu
             client:load
             items={menuItems}
