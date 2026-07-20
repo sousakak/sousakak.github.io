@@ -44,6 +44,16 @@ const menuItems = [
         <meta property="og:locale" content="ja_JP">
         <meta name="format-detection" content="email=no,telephone=no,address=no">
         <ClientRouter />
+        <script is:inline>
+            if ( navigator.userAgent.includes( "Firefox" ) ) {
+                try {
+                    document.startViewTransition = undefined;
+                }
+                catch ( error ) {
+                    console.warn("Failed to use View Transition API");
+                }
+            }
+        </script>
 	</head>
 	<body>
         <AppBackgroundCanvas
