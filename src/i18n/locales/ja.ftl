@@ -28,3 +28,11 @@ about-site-content =
     まだ何もありませんが、気分で生み出した様々なものを今後公開していく予定です。
 
     現時点では、ちょっとしたツールやゲームなどを作ろうかと思っています。お楽しみに！
+
+# Projects content
+projects-title = Projects
+projects-subtitle = ツールやゲームを含むオープンプロジェクト
+
+# Resources content
+resources-title = Resources
+resources-subtitle = オープンリソース

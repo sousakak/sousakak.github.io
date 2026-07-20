@@ -13,3 +13,9 @@ body {
     background: rgba(map.get($colors, "accent"), 0.4);
     color: map.get($colors, "text");
 }
+
+::view-transition-old(root),
+::view-transition-new(root) {
+    animation: none;
+    mix-blend-mode: normal;
+}
