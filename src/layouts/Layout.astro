@@ -2,7 +2,6 @@
 import { ClientRouter } from "astro:transitions";
 
 import AppBackgroundCanvas from "../components/AppBackgroundCanvas.vue";
-import AppLoadingScreen from "../components/AppLoadingScreen.vue";
 import AppMenu from "../components/AppMenu.vue";
 import AppSectionIndicator from "../components/AppSectionIndicator.vue";
 import AppCursor from "../components/AppCursor.vue";
@@ -51,10 +50,11 @@ const menuItems = [
             client:load
             transition:persist="globe"
         />
-        <AppLoadingScreen
-            client:load
-            transition:persist="loading"
-        />
+        <div
+            class="loading-screen"
+            data-loading-screen
+            style="position:fixed;inset:0;z-index:100;pointer-events:none;mask-image:radial-gradient(circle at center, black 0px, black 100%);-webkit-mask-image:radial-gradient(circle at center, black 0px, black 100%);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);"
+        ></div>
         <AppMenu
             client:load
             items={menuItems}
@@ -65,3 +65,15 @@ const menuItems = [
         <AppCursor client:load />
 	</body>
 </html>
+
+<style is:global>
+    ::view-transition-old(root),
+    ::view-transition-new(root) {
+        animation: none;
+        mix-blend-mode: normal;
+    }
+</style>
+
+<script>
+    import "../lib/loadingScreen";
+</script>
