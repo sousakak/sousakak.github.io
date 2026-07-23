@@ -1,6 +1,7 @@
 <script setup lang="ts">
     defineProps<{
         title?: string;
+        href?: string;
     }>();
 </script>
 
@@ -12,7 +13,17 @@
                     v-if="title"
                     class="card-title"
                 >
-                    {{ title }}
+                    <a
+                        v-if="href"
+                        :href="href"
+                    >
+                        {{ title }}
+                    </a>
+                    <template
+                        v-else
+                    >
+                        {{ title }}
+                    </template>
                 </h3>
 
                 <div class="card-body">
@@ -99,7 +110,8 @@
         flex-direction: column;
     }
 
-    .card-title {
+    .card-title,
+    .card-title > a {
         flex-shrink: 0;
 
         margin-bottom: map.get($scale, "space", "md");
