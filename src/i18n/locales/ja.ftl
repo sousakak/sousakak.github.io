@@ -32,6 +32,8 @@ about-site-content =
 # Projects content
 projects-title = Projects
 projects-subtitle = ツールやゲームを含むオープンプロジェクト
+projects-games-title = Games
+projects-games-content = 自作ゲーム
 
 # Resources content
 resources-title = Resources
