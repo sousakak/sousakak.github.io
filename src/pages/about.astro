@@ -1,8 +1,8 @@
 ---
 import Layout from "../layouts/Layout.astro";
 import AppScrollableSections from "../components/AppScrollableSections.vue";
-import TitlePanel from "../components/AppTitlePanel.vue";
-import ContentPanel from "../components/AppContentPanel.vue";
+import AppTitlePanel from "../components/AppTitlePanel.vue";
+import AppContentPanel from "../components/AppContentPanel.vue";
 
 import { getTranslator } from "../i18n";
 
@@ -12,16 +12,16 @@ const t = getTranslator( locale );
 
 <Layout>
     <AppScrollableSections client:load>
-        <TitlePanel title={t('about-title')} >
+        <AppTitlePanel title={t('about-title')} >
             <p>{t('about-subtitle')}</p>
-        </TitlePanel>
+        </AppTitlePanel>
 
-        <ContentPanel title={t('about-me-title')}>
+        <AppContentPanel title={t('about-me-title')}>
             <p>{t('about-me-content')}</p>
-        </ContentPanel>
+        </AppContentPanel>
 
-        <ContentPanel title={t('about-site-title')}>
+        <AppContentPanel title={t('about-site-title')}>
             <p>{t('about-site-content')}</p>
-        </ContentPanel>
+        </AppContentPanel>
     </AppScrollableSections>
 </Layout>
