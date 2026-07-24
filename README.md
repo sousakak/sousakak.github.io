@@ -86,10 +86,16 @@ The project focuses on creating a modern interactive experience while keeping th
 │   │   │   └── erosion.vert
 │   │   │
 │   │   └── utils/
-│   │   │   ├── convertCoords.ts
+│   │       ├── convertCoords.ts
 │   │       └── tween.ts
 │   │
 │   ├── pages/
+│   │   ├── projects/
+│   │   │   └── index.astro
+│   │   │
+│   │   ├── resources/
+│   │   │   └── index.astro
+│   │   │
 │   │   ├── 404.astro
 │   │   ├── about.astro
 │   │   └── index.astro

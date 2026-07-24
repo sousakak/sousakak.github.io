@@ -53,12 +53,16 @@
     }
 
     .title {
+        margin-right: 64px;
+
         font-size: map.get($typography, "size", "xl");
         color: map.get($colors, "text");
         font-weight: 400;
     }
 
     .body {
+        margin-right: 64px;
+
         max-width: 32em;
         font-size: map.get($typography, "size", "md");
         line-height: 1.8;
