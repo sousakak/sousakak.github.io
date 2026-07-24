@@ -1,10 +1,6 @@
 <script setup lang="ts">
     import { ref, computed, onMounted, onBeforeUnmount } from "vue";
-
-    interface SectionChangeDetail {
-        index: number;
-        total: number;
-    }
+    import { subscribeSectionState } from "../lib/state/sectionState";
 
     const maxSlots = 10;
 
@@ -12,6 +8,8 @@
     const total = ref( 0 );
 
     type SlotState = "ghost" | "inactive" | "active";
+
+    let unsubscribe: ( () => void ) | null = null;
 
     const slots = computed<SlotState[]>( () => {
 
@@ -32,24 +30,15 @@
 
     } );
 
-    const handleSectionChange = ( event: Event ): void => {
-        const detail = ( event as CustomEvent<SectionChangeDetail> ).detail;
-        currentIndex.value = detail.index;
-        total.value = detail.total;
-    };
-
     onMounted( () => {
-        window.addEventListener(
-            "section-change",
-            handleSectionChange
-        );
+        unsubscribe = subscribeSectionState( ( state ) => {
+            currentIndex.value = state.index;
+            total.value = state.total;
+        } );
     } );
 
     onBeforeUnmount( () => {
-        window.removeEventListener(
-            "section-change",
-            handleSectionChange
-        );
+        unsubscribe?.();
     } );
 </script>
 
@@ -74,7 +63,7 @@
     .indicator {
         position: fixed;
         top: 50%;
-        right: 24px;
+        right: map.get($scale, "space", "lg");
         z-index: map.get($z-index, "overlay");
 
         display: flex;

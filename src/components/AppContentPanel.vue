@@ -38,6 +38,8 @@
     @use "sass:map";
     @use "../styles/variables" as *;
 
+    $body-width: calc(100vw - map.get($scale, "space", "xl") - 2 * map.get($scale, "space", "lg"));
+
     .content-panel {
         width: 100%;
         height: 100vh;
@@ -53,7 +55,7 @@
     .card {
         position: relative;
 
-        width: calc(100% - map.get($scale, "space", "xl"));
+        width: $body-width;
         max-width: 560px;
         height: min(60vh, 480px);
 
