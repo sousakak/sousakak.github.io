@@ -12,15 +12,8 @@ const t = getTranslator( locale );
 
 <Layout>
     <AppScrollableSections client:load>
-        <AppTitlePanel title={t('projects-title')} >
-            <p>{t('projects-subtitle')}</p>
+        <AppTitlePanel title={t('games-title')} >
+            <p>{t('games-subtitle')}</p>
         </AppTitlePanel>
-
-        <AppContentPanel
-            title={t('projects-games-title')}
-            href="/games"
-        >
-            <p>{t('projects-games-content')}</p>
-        </AppContentPanel>
     </AppScrollableSections>
 </Layout>
