@@ -35,6 +35,10 @@ projects-subtitle = Open projects including tools and games
 projects-games-title = Games
 projects-games-content = Handmade games
 
+# Games content
+games-title = Games
+games-subtitle = Handmade games
+
 # Resources content
 resources-title = Resources
 resources-subtitle = Open resources

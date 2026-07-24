@@ -35,6 +35,10 @@ projects-subtitle = ツールやゲームを含むオープンプロジェクト
 projects-games-title = Games
 projects-games-content = 自作ゲーム
 
+# Games content
+games-title = Games
+games-subtitle = 自作ゲーム
+
 # Resources content
 resources-title = Resources
 resources-subtitle = オープンリソース
