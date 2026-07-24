@@ -149,14 +149,6 @@
 <template>
     <div class="sections">
         <div
-            class="scroll-indicator"
-            :class="`is-${ indicatorPhase }`"
-        >
-            <span class="scroll-indicator-line" />
-            <span class="scroll-indicator-text">Scroll down</span>
-        </div>
-
-        <div
             ref="trackRef"
             class="sections-track"
             :style="{
