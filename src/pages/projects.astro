@@ -12,16 +12,15 @@ const t = getTranslator( locale );
 
 <Layout>
     <AppScrollableSections client:load>
-        <AppTitlePanel title={t('about-title')} >
-            <p>{t('about-subtitle')}</p>
+        <AppTitlePanel title={t('projects-title')} >
+            <p>{t('projects-subtitle')}</p>
         </AppTitlePanel>
 
-        <AppContentPanel title={t('about-me-title')}>
-            <p>{t('about-me-content')}</p>
-        </AppContentPanel>
-
-        <AppContentPanel title={t('about-site-title')}>
-            <p>{t('about-site-content')}</p>
+        <AppContentPanel
+            title={t('projects-games-title')}
+            href="/games"
+        >
+            <p>{t('projects-games-content')}</p>
         </AppContentPanel>
     </AppScrollableSections>
 </Layout>

@@ -32,6 +32,12 @@ about-site-content =
 # Projects content
 projects-title = Projects
 projects-subtitle = Open projects including tools and games
+projects-games-title = Games
+projects-games-content = Handmade games
+
+# Games content
+games-title = Games
+games-subtitle = Handmade games
 
 # Resources content
 resources-title = Resources

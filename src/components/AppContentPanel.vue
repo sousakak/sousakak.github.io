@@ -1,6 +1,7 @@
 <script setup lang="ts">
     defineProps<{
         title?: string;
+        href?: string;
     }>();
 </script>
 
@@ -12,7 +13,17 @@
                     v-if="title"
                     class="card-title"
                 >
-                    {{ title }}
+                    <a
+                        v-if="href"
+                        :href="href"
+                    >
+                        {{ title }}
+                    </a>
+                    <template
+                        v-else
+                    >
+                        {{ title }}
+                    </template>
                 </h3>
 
                 <div class="card-body">
@@ -26,6 +37,8 @@
 <style scoped lang="scss">
     @use "sass:map";
     @use "../styles/variables" as *;
+
+    $body-width: calc(100vw - map.get($scale, "space", "xl") - 2 * map.get($scale, "space", "lg"));
 
     .content-panel {
         width: 100%;
@@ -42,7 +55,7 @@
     .card {
         position: relative;
 
-        width: calc(100% - map.get($scale, "space", "xl"));
+        width: $body-width;
         max-width: 560px;
         height: min(60vh, 480px);
 
@@ -99,7 +112,8 @@
         flex-direction: column;
     }
 
-    .card-title {
+    .card-title,
+    .card-title > a {
         flex-shrink: 0;
 
         margin-bottom: map.get($scale, "space", "md");
