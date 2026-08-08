@@ -23,6 +23,9 @@
 
     let indicatorTimeoutId: number | null = null;
 
+    const touchStartY = ref<number | null>( null );
+    const SWIPE_THRESHOLD = 50;
+
     const getPanelElements = (
         track: HTMLElement
     ): Element[] => {
@@ -114,6 +117,39 @@
 
     };
 
+    const handleTouchStart = ( event: TouchEvent ): void => {
+        touchStartY.value = event.touches[0].clientY;
+    };
+
+    const handleTouchMove = ( event: TouchEvent ): void => {
+        event.preventDefault();
+    };
+
+    const handleTouchEnd = ( event: TouchEvent ): void => {
+
+        if ( touchStartY.value === null )  return;
+
+        if ( isAnimating.value ) {
+            touchStartY.value = null;
+            return;
+        }
+
+        const touchEndY = event.changedTouches[0].clientY;
+        const deltaY = touchStartY.value - touchEndY;
+
+        touchStartY.value = null;
+
+        if ( Math.abs( deltaY ) < SWIPE_THRESHOLD )  return;
+
+        if ( deltaY > 0 ) {
+            goTo( currentIndex.value + 1 );
+        }
+        else {
+            goTo( currentIndex.value - 1 );
+        }
+
+    };
+
     onMounted( () => {
 
         if ( trackRef.value ) {
@@ -130,6 +166,24 @@
             { passive: false }
         );
 
+        window.addEventListener(
+            "touchstart",
+            handleTouchStart,
+            { passive: true }
+        );
+
+        window.addEventListener(
+            "touchmove",
+            handleTouchMove,
+            { passive: false }
+        );
+
+        window.addEventListener(
+            "touchend",
+            handleTouchEnd,
+            { passive: true }
+        );
+
     } );
 
     onBeforeUnmount( () => {
@@ -141,6 +195,21 @@
         window.removeEventListener(
             "wheel",
             handleWheel
+        );
+
+        window.removeEventListener(
+            "touchstart",
+            handleTouchStart
+        );
+
+        window.removeEventListener(
+            "touchmove",
+            handleTouchMove
+        );
+
+        window.removeEventListener(
+            "touchend",
+            handleTouchEnd
         );
 
     } );
