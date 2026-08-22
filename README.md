@@ -90,15 +90,16 @@ The project focuses on creating a modern interactive experience while keeping th
 │   │       └── tween.ts
 │   │
 │   ├── pages/
-│   │   ├── projects/
+│   │   ├── games/
 │   │   │   └── index.astro
 │   │   │
 │   │   ├── resources/
 │   │   │   └── index.astro
 │   │   │
+│   │   ├── index.astro
 │   │   ├── 404.astro
 │   │   ├── about.astro
-│   │   └── index.astro
+│   │   └── projects.astro
 │   │
 │   └── styles/
 │       ├── about.scss

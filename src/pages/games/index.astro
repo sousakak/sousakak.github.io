@@ -3,11 +3,24 @@ import Layout from "../../layouts/Layout.astro";
 import AppScrollableSections from "../../components/AppScrollableSections.vue";
 import AppTitlePanel from "../../components/AppTitlePanel.vue";
 import AppContentPanel from "../../components/AppContentPanel.vue";
+import AppCardPanel, { type CardFlowItem } from "../../components/AppCardPanel.vue";
 
 import { getTranslator } from "../../i18n";
 
 const locale = Astro.currentLocale ?? "en";
 const t = getTranslator( locale );
+
+const games: CardFlowItem[] = [
+    { id: 1, title: "Game A", icon: "/icons/game-a.svg", description: "説明文...", href: "../a" },
+    { id: 2, title: "Game B", icon: "/icons/game-b.svg", description: "説明文..." },
+    { id: 3, title: "Game C", icon: "/icons/game-c.svg", description: "説明文..." },
+    { id: 4, title: "Game D", icon: "/icons/game-d.svg", description: "説明文..." },
+    // ...大量に並べてOK
+];
+
+const handleSearch = ( query: string ): void => {
+    // TODO: ここで games を絞り込むロジックを実装
+};
 ---
 
 <Layout>
@@ -15,5 +28,10 @@ const t = getTranslator( locale );
         <AppTitlePanel title={t('games-title')} >
             <p>{t('games-subtitle')}</p>
         </AppTitlePanel>
+        <AppCardPanel
+            items={games}
+            rows={1}
+            @search={handleSearch}
+        />
     </AppScrollableSections>
 </Layout>
