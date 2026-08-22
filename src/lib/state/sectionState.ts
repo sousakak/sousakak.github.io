@@ -35,3 +35,17 @@ export function subscribeSectionState(
     };
 
 }
+
+if ( typeof document !== "undefined" ) {
+
+    document.addEventListener(
+        "astro:before-swap",
+        () => {
+            setSectionState( {
+                index: 0,
+                total: 0
+            } );
+        }
+    );
+
+}

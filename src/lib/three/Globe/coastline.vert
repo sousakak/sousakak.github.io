@@ -7,6 +7,8 @@ uniform vec3 uVelocity;
 uniform float uRadius;
 uniform float uScatter;
 uniform float uPointSize;
+uniform float uDispersion;
+uniform float uDispersionScale;
 
 varying float vInfluence;
 
@@ -71,12 +73,22 @@ void main() {
         + velocityDirection * influence * 0.03
         + randomDirection * influence * 0.02;
 
-    vec3 transformed = position + offset;
+    //----------------------------------
+    // Dispersion
+    //----------------------------------
+
+    vec3 dispersionOffset =
+        random * uDispersionScale * uDispersion;
+
+    vec3 transformed =
+        position
+        + offset
+        + dispersionOffset;
 
     gl_Position = projectionMatrix
         * modelViewMatrix
         * vec4( transformed, 1.0 );
 
-    gl_PointSize = uPointSize;
+    gl_PointSize = uPointSize * ( 1.0 + uDispersion * 0.6 );
 
 }

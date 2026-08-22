@@ -108,6 +108,12 @@ export class Globe {
 
     }
 
+    public setDispersion(
+        value: number
+    ): void {
+        this.material.setDispersion( value );
+    }
+
     public update(
         time: Time
     ): void {

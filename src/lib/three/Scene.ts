@@ -5,6 +5,10 @@ import { Globe } from "./Globe/Globe";
 import { Interaction } from "./Interaction";
 import { Renderer } from "./Renderer";
 import { Time } from "./Time";
+import { subscribeSectionState } from "../state/sectionState";
+
+const DISPERSION_SPEED = 1;
+const CONVERGENCE_SPEED = 4.5;
 
 export default class Scene {
 
@@ -21,6 +25,12 @@ export default class Scene {
     private readonly time: Time;
 
     private animationFrameId: number | null = null;
+
+    private dispersion = 0;
+
+    private dispersionTarget = 0;
+
+    private readonly unsubscribeSectionState: () => void;
 
     public constructor(
         canvas: HTMLCanvasElement
@@ -49,6 +59,13 @@ export default class Scene {
             this.handleResize
         );
 
+        this.unsubscribeSectionState = subscribeSectionState(
+            ( state ) => {
+                this.dispersionTarget =
+                    state.index > 0 ? 1 : 0;
+            }
+        );
+
     }
 
     public start(): void {
@@ -67,6 +84,8 @@ export default class Scene {
             "resize",
             this.handleResize
         );
+
+        this.unsubscribeSectionState();
 
         this.interaction.dispose();
         this.globe.dispose();
@@ -102,6 +121,23 @@ export default class Scene {
 
         this.globe.update(
             this.time
+        );
+
+        //----------------------------------
+        // Dispersion
+        //----------------------------------
+
+        const dispersionSpeed =
+            this.dispersionTarget > this.dispersion
+                ? DISPERSION_SPEED
+                : CONVERGENCE_SPEED;
+
+        this.dispersion +=
+            ( this.dispersionTarget - this.dispersion )
+            * Math.min( 1, this.time.delta * dispersionSpeed );
+
+        this.globe.setDispersion(
+            this.dispersion
         );
 
         //----------------------------------

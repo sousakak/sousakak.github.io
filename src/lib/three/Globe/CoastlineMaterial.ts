@@ -47,6 +47,12 @@ export class CoastlineMaterial
                 },
                 uOpacity: {
                     value: 0.9
+                },
+                uDispersion: {
+                    value: 0
+                },
+                uDispersionScale: {
+                    value: 2.4
                 }
             }
 
@@ -70,6 +76,12 @@ export class CoastlineMaterial
         ( this.uniforms.uVelocity.value as THREE.Vector3 )
             .copy( velocity );
 
+    }
+
+    public setDispersion(
+        value: number
+    ): void {
+        this.uniforms.uDispersion.value = value;
     }
 
 }
