@@ -12,6 +12,7 @@
     const props = withDefaults(
         defineProps<{
             items: CardFlowItem[];
+            title?: string;
             rows?: number;
             showSearch?: boolean;
             searchPlaceholder?: string;
@@ -34,6 +35,26 @@
         emit( "search", searchQuery.value );
     };
 
+    const filteredItems = computed<CardFlowItem[]>( () => {
+
+        const query = searchQuery.value
+            .trim()
+            .toLowerCase();
+
+        if ( query === "" ) {
+            return props.items;
+        }
+
+        return props.items.filter(
+            ( item ) => item.title
+                .toLowerCase()
+                .includes( query )
+        );
+
+    } );
+
+    const MIN_TRACK_ITEMS = 12;
+
     interface Row {
         items: CardFlowItem[];
         direction: "right" | "left";
@@ -43,19 +64,36 @@
 
         const rowCount = Math.max( 1, props.rows );
 
-        const groups: CardFlowItem[][] = Array.from(
+        const buckets: CardFlowItem[][] = Array.from(
             { length: rowCount },
             () => []
         );
 
-        props.items.forEach( ( item, index ) => {
-            groups[ index % rowCount ].push( item );
+        filteredItems.value.forEach( ( item, index ) => {
+            buckets[ index % rowCount ].push( item );
         } );
 
-        return groups.map( ( rowItems, index ) => ( {
-            items: rowItems,
-            direction: ( index % 2 === 0 ) ? "right" : "left"
-        } ) );
+        return buckets
+            .filter( ( rowItems ) => rowItems.length > 0 )
+            .map( ( rowItems, index ) => {
+
+                const repeatCount = Math.max(
+                    1,
+                    Math.ceil( MIN_TRACK_ITEMS / rowItems.length )
+                );
+
+                const paddedItems: CardFlowItem[] = [];
+
+                for ( let i = 0; i < repeatCount; i++ ) {
+                    paddedItems.push( ...rowItems );
+                }
+
+                return {
+                    items: paddedItems,
+                    direction: ( index % 2 === 0 ) ? "right" : "left"
+                };
+
+            } );
 
     } );
 
@@ -68,17 +106,15 @@
     const hoveredId = ref<ItemId | null>( null );
     const pinnedId = ref<ItemId | null>( null );
 
-    const activeId = computed<ItemId | null>( () => {
-        return pinnedId.value ?? hoveredId.value;
-    } );
+    const activeId = computed<ItemId | null>( () =>
+        pinnedId.value ?? hoveredId.value
+    );
 
     const activeItem = computed<CardFlowItem | null>( () => {
 
-        if ( activeId.value === null ) {
-            return null;
-        }
+        if ( activeId.value === null ) return null;
 
-        return props.items.find(
+        return filteredItems.value.find(
             ( item ) => item.id === activeId.value
         ) ?? null;
 
@@ -88,9 +124,7 @@
         rowItems: CardFlowItem[]
     ): boolean => {
 
-        if ( activeId.value === null ) {
-            return false;
-        }
+        if ( activeId.value === null ) return false;
 
         return rowItems.some(
             ( item ) => item.id === activeId.value
@@ -104,9 +138,7 @@
 
     const handleCardLeave = ( item: CardFlowItem ): void => {
 
-        if ( hoveredId.value === item.id ) {
-            hoveredId.value = null;
-        }
+        if ( hoveredId.value === item.id ) hoveredId.value = null;
 
     };
 
@@ -130,9 +162,7 @@
 
     const handleKeydown = ( event: KeyboardEvent ): void => {
 
-        if ( event.key === "Escape" ) {
-            closePopup();
-        }
+        if ( event.key === "Escape" ) closePopup();
 
     };
 
@@ -153,20 +183,36 @@
 
 <template>
     <section class="card-flow-panel">
-        <div
-            v-if="showSearch"
-            class="search"
-        >
-            <input
-                v-model="searchQuery"
-                type="text"
-                class="search-input"
-                :placeholder="searchPlaceholder"
-                @input="handleSearchInput"
-            />
+        <div class="header">
+            <h2
+                v-if="title"
+                class="panel-title"
+            >
+                {{ title }}
+            </h2>
+
+            <div
+                v-if="showSearch"
+                class="search"
+            >
+                <input
+                    v-model="searchQuery"
+                    type="text"
+                    class="search-input"
+                    :placeholder="searchPlaceholder"
+                    @input="handleSearchInput"
+                />
+            </div>
         </div>
 
         <div class="rows">
+            <p
+                v-if="filteredItems.length === 0"
+                class="empty-message"
+            >
+                見つかりませんでした
+            </p>
+
             <div
                 v-for="( row, rowIndex ) in rowGroups"
                 :key="rowIndex"
@@ -187,8 +233,8 @@
                         :aria-hidden="copyIndex === 2 ? 'true' : undefined"
                     >
                         <button
-                            v-for="item in row.items"
-                            :key="`${ copyIndex }-${ item.id }`"
+                            v-for="( item, itemIndex ) in row.items"
+                            :key="`${ copyIndex }-${ itemIndex }-${ item.id }`"
                             type="button"
                             class="card"
                             :class="{ 'is-active': activeId === item.id }"
@@ -289,6 +335,8 @@
     @use "sass:map";
     @use "../styles/variables" as *;
 
+    $header-clearance: 96px;
+
     .card-flow-panel {
         position: relative;
 
@@ -301,15 +349,36 @@
         gap: map.get($scale, "space", "lg");
 
         padding: map.get($scale, "space", "xl");
+        padding-top: $header-clearance;
         padding-right: calc(#{map.get($scale, "space", "xl")} + 64px); // Prevent overlap with Indicator
+
+        background: rgba(255, 255, 255, 0.025);
+        backdrop-filter: blur(4px);
+        -webkit-backdrop-filter: blur(4px);
     }
 
     //----------------------------------
-    // Search
+    // Header
     //----------------------------------
 
-    .search {
+    .header {
         flex-shrink: 0;
+
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: map.get($scale, "space", "md");
+    }
+
+    .panel-title {
+        font-size: map.get($typography, "size", "xl");
+        font-weight: 400;
+        color: map.get($colors, "text");
+        text-align: center;
+    }
+
+    .search {
+        width: 100%;
 
         display: flex;
         justify-content: center;
@@ -319,7 +388,7 @@
         width: 100%;
         max-width: 420px;
 
-        padding: map.get($scale, "space", "sm") map.get($scale, "space", "md");
+        padding: map.get($scale, "space", "md") map.get($scale, "space", "lg");
 
         font-size: map.get($typography, "size", "md");
         color: map.get($colors, "text");
@@ -345,6 +414,8 @@
     //----------------------------------
 
     .rows {
+        position: relative;
+
         flex: 1;
         min-height: 0;
 
@@ -352,6 +423,13 @@
         flex-direction: column;
         justify-content: center;
         gap: map.get($scale, "space", "lg");
+    }
+
+    .empty-message {
+        text-align: center;
+
+        font-size: map.get($typography, "size", "md");
+        color: rgba(255, 255, 255, 0.45);
     }
 
     .row {
@@ -442,6 +520,7 @@
 
         cursor: pointer;
         text-align: left;
+        pointer-events: auto;
 
         transition:
             border-color map.get($motion, "duration", "fast") map.get($motion, "easing", "ease"),
