@@ -335,7 +335,7 @@
     @use "sass:map";
     @use "../styles/variables" as *;
 
-    $header-clearance: 96px;
+    $header-clearance: 20px * 3;
 
     .card-flow-panel {
         position: relative;
@@ -349,7 +349,7 @@
         gap: map.get($scale, "space", "lg");
 
         padding: map.get($scale, "space", "xl");
-        padding-top: $header-clearance;
+        padding-top: $header-clearance + map.get($scale, "space", "md");
         padding-right: calc(#{map.get($scale, "space", "xl")} + 64px); // Prevent overlap with Indicator
 
         background: rgba(255, 255, 255, 0.025);
