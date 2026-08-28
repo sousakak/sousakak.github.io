@@ -1,0 +1,1 @@
+let n={index:0,total:0};const t=new Set;function s(e){n=e;for(const o of t)o(e)}function i(e){return e(n),t.add(e),()=>{t.delete(e)}}typeof document<"u"&&document.addEventListener("astro:before-swap",()=>{s({index:0,total:0})});export{s as a,i as s};
