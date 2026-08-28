@@ -2,7 +2,6 @@
 import Layout from "../../layouts/Layout.astro";
 import AppScrollableSections from "../../components/AppScrollableSections.vue";
 import AppTitlePanel from "../../components/AppTitlePanel.vue";
-import AppContentPanel from "../../components/AppContentPanel.vue";
 import AppCardPanel, { type CardFlowItem } from "../../components/AppCardPanel.vue";
 
 import { getTranslator } from "../../i18n";
@@ -13,13 +12,12 @@ const t = getTranslator( locale );
 const games: CardFlowItem[] = [
     { id: 1, title: "ナンプレ", icon: "/icons/game-a.svg", description: "よくあるナンプレ（数独）ゲームです。", href: "./sudoku" },
     { id: 2, title: "ぼくのかんがえたさいきょうのひっさつわざ", icon: "/icons/game-b.svg", description: "さいきょーの必殺技をつくりだそー。" },
-    { id: 3, title: "Game C", icon: "/icons/game-c.svg", description: "説明文..." },
-    { id: 4, title: "Game D", icon: "/icons/game-d.svg", description: "説明文..." },
-    // ...大量に並べてOK
+    { id: 3, title: "カラーソート", icon: "/icons/game-c.svg", description: "試験管の中の色水を入れ替えて同じ色で統一する、あれ。" },
+    { id: 4, title: "ビルディングパズル", icon: "/icons/game-d.png", description: "各方向からビルが何本見えるかをヒントに、盤面を埋めていくパズル。" },
 ];
 
 const handleSearch = ( query: string ): void => {
-    // TODO: ここで games を絞り込むロジックを実装
+    // 検索アルゴリズム
 };
 ---
 
@@ -32,6 +30,7 @@ const handleSearch = ( query: string ): void => {
             items={games}
             rows={1}
             @search={handleSearch}
+            client:visible
         />
     </AppScrollableSections>
 </Layout>

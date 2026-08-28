@@ -102,10 +102,11 @@
     type ItemId = CardFlowItem["id"];
 
     const hoveredId = ref<ItemId | null>( null );
+    const focusedId = ref<ItemId | null>( null );
     const pinnedId = ref<ItemId | null>( null );
 
     const activeId = computed<ItemId | null>( () =>
-        pinnedId.value ?? hoveredId.value
+        pinnedId.value ?? focusedId.value ?? hoveredId.value
     );
 
     const activeItem = computed<CardFlowItem | null>( () => {
@@ -136,7 +137,17 @@
         if ( hoveredId.value === item.id ) hoveredId.value = null;
     };
 
+    const handleCardFocus = ( item: CardFlowItem ): void => {
+        focusedId.value = item.id;
+    };
+
+    const handleCardBlur = ( item: CardFlowItem ): void => {
+        if ( focusedId.value === item.id ) focusedId.value = null;
+    };
+
     const toggleCard = ( item: CardFlowItem ): void => {
+        console.log('toggleCard', item)
+
         if ( pinnedId.value === item.id ) {
             pinnedId.value = null;
             return;
@@ -150,6 +161,7 @@
     const closePopup = (): void => {
         pinnedId.value = null;
         hoveredId.value = null;
+        focusedId.value = null;
     };
 
     const handleKeydown = ( event: KeyboardEvent ): void => {
@@ -232,26 +244,28 @@
                             :tabindex="copyIndex === 2 ? -1 : 0"
                             @mouseenter="handleCardEnter( item )"
                             @mouseleave="handleCardLeave( item )"
-                            @focus="handleCardEnter( item )"
-                            @blur="handleCardLeave( item )"
+                            @focus="handleCardFocus( item )"
+                            @blur="handleCardBlur( item )"
                             @click="toggleCard( item )"
                         >
-                            <span class="card-icon">
-                                <img
-                                    v-if="item.icon"
-                                    :src="item.icon"
-                                    :alt="item.title"
-                                />
-                                <span
-                                    v-else
-                                    class="card-icon-fallback"
-                                >
-                                    {{ item.title.charAt( 0 ) }}
+                            <span class="card-inner">
+                                <span class="card-icon">
+                                    <img
+                                        v-if="item.icon"
+                                        :src="item.icon"
+                                        :alt="item.title"
+                                    />
+                                    <span
+                                        v-else
+                                        class="card-icon-fallback"
+                                    >
+                                        {{ item.title.charAt( 0 ) }}
+                                    </span>
                                 </span>
-                            </span>
 
-                            <span class="card-title">
-                                {{ item.title }}
+                                <span class="card-title">
+                                    {{ item.title }}
+                                </span>
                             </span>
                         </button>
                     </div>
@@ -261,7 +275,7 @@
 
         <Transition name="popup">
             <div
-                v-if="activeItem"
+                v-if="activeItem != null && pinnedId != null"
                 class="popup-layer"
             >
                 <div
@@ -455,6 +469,8 @@
             animation-name: card-flow-right;
         }
 
+        &:hover,
+        &:focus-within,
         &.is-paused {
             animation-play-state: paused;
         }
@@ -497,10 +513,6 @@
     .card {
         flex-shrink: 0;
 
-        display: flex;
-        align-items: center;
-        gap: map.get($scale, "space", "sm");
-
         width: 220px;
         padding: map.get($scale, "space", "sm") map.get($scale, "space", "md");
 
@@ -514,19 +526,31 @@
 
         transition:
             border-color map.get($motion, "duration", "fast") map.get($motion, "easing", "ease"),
-            background-color map.get($motion, "duration", "fast") map.get($motion, "easing", "ease"),
-            transform map.get($motion, "duration", "fast") map.get($motion, "easing", "ease");
+            background-color map.get($motion, "duration", "fast") map.get($motion, "easing", "ease");
 
         &:hover,
         &:focus-visible,
         &.is-active {
             background: rgba(255, 255, 255, 0.06);
             border-color: rgba(map.get($colors, "accent"), 0.6);
-            transform: translateY(-2px);
         }
 
         &:focus-visible {
             outline: none;
+        }
+    }
+
+    .card-inner {
+        display: flex;
+        align-items: center;
+        gap: map.get($scale, "space", "sm");
+
+        transition: transform map.get($motion, "duration", "fast") map.get($motion, "easing", "ease");
+
+        .card:hover &,
+        .card:focus-visible &,
+        .card.is-active & {
+            transform: translateY(-2px);
         }
     }
 

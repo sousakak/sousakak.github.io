@@ -60,8 +60,6 @@ const setProgress = ( value: number ): void => {
 
     if ( !element ) return;
 
-    void console.log( 'progress: ' + currentProgress );
-
     applyStyle( element, clamped );
 
 };
