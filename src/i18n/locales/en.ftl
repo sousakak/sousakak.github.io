@@ -33,7 +33,8 @@ about-site-content =
 projects-title = Projects
 projects-subtitle = Open projects including tools and games
 projects-games-title = Games
-projects-games-content = Handmade games
+projects-games-content =
+    Handmade browser games. These shall include mathematical pencil games, other puzzle games and even some graphic games.
 
 # Games content
 games-title = Games

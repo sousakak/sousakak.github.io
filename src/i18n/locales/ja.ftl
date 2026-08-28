@@ -33,7 +33,8 @@ about-site-content =
 projects-title = Projects
 projects-subtitle = ツールやゲームを含むオープンプロジェクト
 projects-games-title = Games
-projects-games-content = 自作ゲーム
+projects-games-content = 
+    ブラウザ上で遊べる自作ゲーム。ペンシルパズルをはじめとしたパズルゲームに加え、グラフィックゲームも作る予定です。
 
 # Games content
 games-title = Games
