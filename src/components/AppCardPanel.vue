@@ -41,9 +41,7 @@
             .trim()
             .toLowerCase();
 
-        if ( query === "" ) {
-            return props.items;
-        }
+        if ( query === "" )  return props.items;
 
         return props.items.filter(
             ( item ) => item.title
@@ -111,13 +109,11 @@
     );
 
     const activeItem = computed<CardFlowItem | null>( () => {
-
         if ( activeId.value === null ) return null;
 
         return filteredItems.value.find(
             ( item ) => item.id === activeId.value
         ) ?? null;
-
     } );
 
     const isRowPaused = (
@@ -137,13 +133,10 @@
     };
 
     const handleCardLeave = ( item: CardFlowItem ): void => {
-
         if ( hoveredId.value === item.id ) hoveredId.value = null;
-
     };
 
     const toggleCard = ( item: CardFlowItem ): void => {
-
         if ( pinnedId.value === item.id ) {
             pinnedId.value = null;
             return;
@@ -152,7 +145,6 @@
         pinnedId.value = item.id;
 
         emit( "select", item );
-
     };
 
     const closePopup = (): void => {
@@ -161,9 +153,7 @@
     };
 
     const handleKeydown = ( event: KeyboardEvent ): void => {
-
         if ( event.key === "Escape" ) closePopup();
-
     };
 
     onMounted( () => {
