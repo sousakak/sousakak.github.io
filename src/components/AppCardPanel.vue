@@ -146,8 +146,6 @@
     };
 
     const toggleCard = ( item: CardFlowItem ): void => {
-        console.log('toggleCard', item)
-
         if ( pinnedId.value === item.id ) {
             pinnedId.value = null;
             return;

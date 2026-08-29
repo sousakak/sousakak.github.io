@@ -1,6 +1,26 @@
 ---
 import Layout from "../../../layouts/Layout.astro";
+import AppScrollableSections from "../../../components/AppScrollableSections.vue";
+import AppTitlePanel from "../../../components/AppTitlePanel.vue";
+import AppGamePanel from "../../../components/AppGamePanel.vue";
 ---
 
 <Layout>
+    <AppScrollableSections client:load>
+        <AppTitlePanel title="数独">
+            <p>ナンプレで頭の体操。</p>
+        </AppTitlePanel>
+
+        <AppGamePanel
+            client:load
+            title="数独"
+            tags={['puzzle']}
+        >
+            <template #controls>
+                <!-- Implementation of controls -->
+            </template>
+
+            <!-- Implementation of the game itself -->
+        </AppGamePanel>
+    </AppScrollableSections>
 </Layout>
