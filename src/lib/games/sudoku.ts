@@ -60,9 +60,23 @@ function getCandidates( board: Board, row: number, col: number ): number[] {
 }
 
 export function fillNakedSingles( board: Board ): boolean {
-    return false
+    let updated = false;
+
+    for ( const [ i, boardRow ] of board.entries() ) {
+        for ( const [ j, boardCell ] of boardRow.entries() ) {
+            if ( boardCell === 0 ) {
+                let candidates = getCandidates( board, i, j );
+                if ( candidates.length === 1 ) {
+                    board[i][j] = candidates[0];
+                    updated = true;
+                }
+            }
+        }
+    }
+    return updated;
 }
 
 export function fillHiddenSingles( board: Board ): boolean {
-    return false
+    let updated = false;
+    return updated;
 }
