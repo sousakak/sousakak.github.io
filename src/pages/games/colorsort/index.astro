@@ -1,0 +1,16 @@
+---
+import Layout from "../../../layouts/Layout.astro";
+import AppScrollableSections from "../../../components/AppScrollableSections.vue";
+import AppTitlePanel from "../../../components/AppTitlePanel.vue";
+import AppColorSortGame from "../../../components/games/colorSort/AppColorsortGame.vue";
+---
+
+<Layout>
+    <AppScrollableSections client:load>
+        <AppTitlePanel title="カラーソート">
+            <p>同じ色を1本にまとめよう。</p>
+        </AppTitlePanel>
+
+        <AppColorSortGame client:load />
+    </AppScrollableSections>
+</Layout>
