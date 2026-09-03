@@ -21,6 +21,23 @@ const t = getTranslator( locale );
             href="/games"
         >
             <p>{t('projects-games-content')}</p>
+            <p class="link-proceed-container">
+                <a class="link-proceed" href="/games">{t('projects-games-proceed')} →</a>
+            </p>
         </AppContentPanel>
     </AppScrollableSections>
 </Layout>
+
+<style lang="scss" is:global>
+    @use "sass:map";
+    @use "../styles/variables" as *;
+
+    .link-proceed-container {
+        text-align: right;
+        margin-right: map.get($scale, "space", "md");
+
+        .link-proceed {
+            color: #FFF;
+        }
+    }
+</style>

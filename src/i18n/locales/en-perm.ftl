@@ -35,6 +35,7 @@ projects-subtitle = Open projects including tools and games
 projects-games-title = Games
 projects-games-content =
     Handmade browser games. These shall include mathematical pencil games, other puzzle games and even some graphic games.
+projects-games-proceed = Proceed to games
 
 # Games content
 games-title = Games

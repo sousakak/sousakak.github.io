@@ -35,6 +35,7 @@ projects-subtitle = ツールやゲームを含むオープンプロジェクト
 projects-games-title = Games
 projects-games-content = 
     ブラウザ上で遊べる自作ゲーム。ペンシルパズルをはじめとしたパズルゲームに加え、グラフィックゲームも作る予定です。
+projects-games-proceed = ゲーム一覧へ
 
 # Games content
 games-title = Games
