@@ -10,7 +10,7 @@ export interface PourMove {
 export interface DifficultySettings {
     colorCount: number,
     capacity: number,
-    emptyTubes: number,
+    tubeCount: number,
 };
 
 export const COLOR_PALETTE: Color[] = [
@@ -89,6 +89,19 @@ export function isTubeSorted( tube: Tube, capacity: number ): boolean {
 
 export function isSolved( tubes: Tubes, capacity: number ): boolean {
     return tubes.every( tube => isTubeSorted( tube, capacity ) );
+}
+
+export function hasAnyValidMove( tubes: Tubes, capacity: number ): boolean {
+    for ( let from = 0; from < tubes.length; from++ ) {
+        for ( let to = 0; to < tubes.length; to++ ) {
+            if ( canPour( tubes, from, to, capacity ) ) return true;
+        }
+    }
+    return false;
+}
+
+export function isStuck( tubes: Tubes, capacity: number ): boolean {
+    return !isSolved( tubes, capacity ) && !hasAnyValidMove( tubes, capacity );
 }
 
 function serialize( tubes: Tubes ): string {
@@ -191,13 +204,17 @@ function scramble( tubes: Tubes, capacity: number, steps: number ): void {
 }
 
 export function generatePuzzle( settings: DifficultySettings ): Tubes {
-    const { colorCount, capacity, emptyTubes } = settings;
+    const { colorCount, capacity, tubeCount } = settings;
 
     if ( colorCount > COLOR_PALETTE.length ) {
         throw new Error( `colorCountはパレットの最大数(${ COLOR_PALETTE.length })以下にしてください。` );
     }
+    if ( tubeCount < colorCount ) {
+        throw new Error( 'tubeCountはcolorCount以上にしてください。' );
+    }
 
     const colors = COLOR_PALETTE.slice( 0, colorCount );
+    const emptyTubes = tubeCount - colorCount;
     const scrambleSteps = Math.max( 60, colorCount * capacity * 4 );
 
     for ( let attempt = 0; attempt < MAX_SCRAMBLE_RETRIES; attempt++ ) {
@@ -210,5 +227,5 @@ export function generatePuzzle( settings: DifficultySettings ): Tubes {
         if ( !isSolved( tubes, capacity ) ) return tubes;
     }
 
-    throw new Error( 'パズルの生成に失敗しました。colorCount/capacity/emptyTubesを見直してください。' );
+    throw new Error( 'パズルの生成に失敗しました。colorCount/capacity/tubeCountを見直してください。' );
 }
