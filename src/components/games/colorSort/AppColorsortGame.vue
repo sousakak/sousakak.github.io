@@ -16,18 +16,20 @@
         WorkerResponse,
     } from '../../../workers/colorsortWorker.ts';
 
-    type Difficulty = 'easy' | 'normal' | 'hard';
+    type Difficulty = 'easy' | 'normal' | 'hard' | 'arduous';
 
     const DIFFICULTY_LABELS: Record<Difficulty, string> = {
         easy: '簡単',
         normal: '普通',
-        hard: '難しい',
+        hard: '困難',
+        arduous: '災難'
     };
 
     const DIFFICULTY_SETTINGS: Record<Difficulty, DifficultySettings> = {
         easy:   { colorCount: 4, capacity: 4, tubeCount: 6 },
         normal: { colorCount: 6, capacity: 4, tubeCount: 9 },
-        hard:   { colorCount: 8, capacity: 4, tubeCount: 12 },
+        hard:   { colorCount: 8, capacity: 5, tubeCount: 12 },
+        arduous: { colorCount: 12, capacity: 8, tubeCount: 15 },
     };
 
     const difficulty = ref<Difficulty>( 'easy' );
