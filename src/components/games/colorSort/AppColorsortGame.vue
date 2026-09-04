@@ -19,9 +19,9 @@
     };
 
     const DIFFICULTY_SETTINGS: Record<Difficulty, DifficultySettings> = {
-        easy:   { colorCount: 4, capacity: 4, emptyTubes: 2 },
-        normal: { colorCount: 6, capacity: 4, emptyTubes: 2 },
-        hard:   { colorCount: 8, capacity: 4, emptyTubes: 2 },
+        easy:   { colorCount: 6, capacity: 4, emptyTubes: 2 },
+        normal: { colorCount: 8, capacity: 4, emptyTubes: 2 },
+        hard:   { colorCount: 8, capacity: 4, emptyTubes: 1 },
     };
 
     const difficulty = ref<Difficulty>( 'easy' );

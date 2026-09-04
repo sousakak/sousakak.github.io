@@ -1,5 +1,3 @@
-import { shuffleArray } from '../utils/random';
-
 export type Color = string;
 export type Tube = Color[];
 export type Tubes = Tube[];
@@ -30,8 +28,7 @@ export const COLOR_PALETTE: Color[] = [
     '#8b5cf6', // violet
 ];
 
-const DEFAULT_MAX_ATTEMPTS = 100;
-const SOLVE_STATE_LIMIT = 50000;
+const SOLVE_STATE_LIMIT = 300000;
 
 export function topColor( tube: Tube ): Color | null {
     return tube.length === 0 ? null : tube[tube.length - 1];
@@ -144,6 +141,55 @@ export function solve( tubes: Tubes, capacity: number ): PourMove[] | null {
     return null;
 }
 
+function pickRandom<T>( items: T[] ): T {
+    return items[ Math.floor( Math.random() * items.length ) ];
+}
+
+const MAX_SCRAMBLE_RETRIES = 5;
+
+// Start with all test tubes in a uniform state (all the same color or empty),
+// then shuffle them using "reverse playback." One move in "reverse play"
+// consists of stacking a continuous block of the same color
+// (1 to a certain number of consecutive test tubes) from the top of test tube B
+// onto another test tube A, regardless of the color of the contents in A.
+// Since this means that the move "pouring that block back from A to B as is"
+// is always a valid move, the resulting state is guaranteed by the game’s design
+// to be solvable without the need for search or verification.
+function scramble( tubes: Tubes, capacity: number, steps: number ): void {
+    const tubeCount = tubes.length;
+    let performed = 0;
+    let stalled = 0;
+
+    while ( performed < steps && stalled < steps * 20 ) {
+        const nonEmpty = tubes
+            .map( ( tube, index ) => ( { tube, index } ) )
+            .filter( ( { tube } ) => tube.length > 0 );
+
+        const { tube: fromTube, index: b } = pickRandom( nonEmpty );
+        const color = topColor( fromTube )!;
+        const maxAmount = topRunLength( fromTube );
+        const amount = 1 + Math.floor( Math.random() * maxAmount );
+
+        const candidates = Array.from( { length: tubeCount }, ( _, i ) => i )
+            .filter( i => i !== b && tubes[i].length + amount <= capacity );
+
+        if ( candidates.length === 0 ) {
+            stalled++;
+            continue;
+        }
+
+        const a = pickRandom( candidates );
+
+        for ( let i = 0; i < amount; i++ ) {
+            tubes[b].pop();
+            tubes[a].push( color );
+        }
+
+        performed++;
+        stalled = 0;
+    }
+}
+
 export function generatePuzzle( settings: DifficultySettings ): Tubes {
     const { colorCount, capacity, emptyTubes } = settings;
 
@@ -152,25 +198,16 @@ export function generatePuzzle( settings: DifficultySettings ): Tubes {
     }
 
     const colors = COLOR_PALETTE.slice( 0, colorCount );
+    const scrambleSteps = Math.max( 60, colorCount * capacity * 4 );
 
-    for ( let attempt = 0; attempt < DEFAULT_MAX_ATTEMPTS; attempt++ ) {
-        const pool: Color[] = [];
-        colors.forEach( color => {
-            for ( let i = 0; i < capacity; i++ ) pool.push( color );
-        } );
+    for ( let attempt = 0; attempt < MAX_SCRAMBLE_RETRIES; attempt++ ) {
+        // 揃った状態から開始する
+        const tubes: Tubes = colors.map( color => Array( capacity ).fill( color ) );
+        for ( let t = 0; t < emptyTubes; t++ ) tubes.push( [] );
 
-        const shuffled = shuffleArray( pool );
-        const tubes: Tubes = [];
+        scramble( tubes, capacity, scrambleSteps );
 
-        for ( let t = 0; t < colorCount; t++ ) {
-            tubes.push( shuffled.slice( t * capacity, ( t + 1 ) * capacity ) );
-        }
-        for ( let t = 0; t < emptyTubes; t++ ) {
-            tubes.push( [] );
-        }
-
-        if ( isSolved( tubes, capacity ) ) continue; // 最初から揃っているものは弾く
-        if ( solve( tubes, capacity ) !== null ) return tubes;
+        if ( !isSolved( tubes, capacity ) ) return tubes;
     }
 
     throw new Error( 'パズルの生成に失敗しました。colorCount/capacity/emptyTubesを見直してください。' );
